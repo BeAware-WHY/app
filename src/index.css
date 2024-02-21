@@ -28,7 +28,30 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  /*background-image:url('./assets/images/background.png') repeat;
+  */
+  background: radial-gradient(at top right,#678ebd 15%,  #123969 60%);
 }
+ 
+/* CSS code for setting background image */
+.background-image {
+  /* Set background image */
+  background-image: url('./assets/images/background.png');
+  /* Set background size to cover the entire element */
+  background-size: cover;
+  /* Set background position to center */
+  background-position: center;
+  /* Set background repeat to no-repeat */
+  background-repeat: no-repeat;
+  /* Optionally, set additional properties */
+  /* For example, set width and height to fill the screen */
+  width: 100vw;
+  height: 100vh;
+}
+
+
+
+
 
 h1 {
   font-size: 3.2em;

@@ -1,15 +1,11 @@
 import './App.css'
+import Signin from './components/pages/Signin/Signin'
 
 function App() {
   return (
-    <>
-    <h2>
-        We Hear You
-      </h2>  
-      <h3>
-        Be Aware - The Deaf Assistant
-      </h3>
-    </>
+    <div>
+      <Signin/>
+    </div>
   )
 }
 
