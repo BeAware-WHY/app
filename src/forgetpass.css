@@ -1,0 +1,142 @@
+
+   body {
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+label {
+    text-align: left; /* Align the text to the left */
+    width: 80%; /* Adjust the width as needed */
+    margin-bottom: 10px; /* Add some space between inputs */
+}
+
+label:nth-child(1) {
+    font-family: 'Poppins', sans-serif; /* Use Poppins font */
+    font-size: 20px; /* Set the font size to 20 */
+}
+
+label:nth-child(2) {
+    font-family: 'Poppins', sans-serif; /* Use Poppins font */
+    font-size: 16px; /* Set the font size to 16 */
+}
+label:nth-child(3) {
+    font-family: 'Poppins', sans-serif; /* Use Poppins font */
+    font-size: 16px; /* Set the font size to 16 */
+}
+input[type="submit"] {
+    width: 80%; /* Adjust the width as needed */
+    margin-bottom: 10px; /* Add some space between inputs */
+}
+input[type="text"]::placeholder {
+    font-family: 'FontAwesome'; /* Use FontAwesome for the input placeholder icon */
+    content: "\f0e0"; /* Add the Unicode for the envelope icon */
+    font-family: 'Poppins', sans-serif; /* Use Poppins font for the input placeholder */
+
+    padding-left: 20px; /* Add some space before the icon */
+}
+input[type="text"].placeicon::placeholder::before {
+    font-family: 'FontAwesome'; /* Use FontAwesome for the icon */
+    content: "\f0e0"; /* Add the Unicode for the envelope icon */
+    margin-right: 5px; /* Add some space between the icon and the text */
+}
+input[type="text"] {
+    width: 80%; /* Adjust the width as needed */
+    margin-bottom: 10px; /* Add some space between inputs */
+    border: none; /* Remove the border */
+    background: none; /* Remove the background */
+    border-bottom: 1px solid #ccc; /* Add a bottom border for the underline effect */
+    padding-bottom: 5px; /* Add some space between the text and the border */
+    transition: border-bottom-color 0.3s; /* Add a smooth transition for the border color */
+}
+
+input[type="text"]:focus {
+    outline: none; /* Remove the default focus outline */
+    border-bottom-color: #007bff; /* Change the bottom border color when the input is focused */
+}
+
+
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            margin: 60px;
+            width: 380px;
+            padding: 46px;
+            height: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                background-color: #D9D9D9;
+
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .card p {
+            margin-bottom: 0;
+        }
+
+        .card a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background-color: #f5f5f5;
+        }
+
+        .card a:hover {
+            background-color: #e5e5e5;
+        }
+ .icon {
+    width: 500px; /* Set the width of the image */
+    margin-right: 0px; /* Adjust the spacing between the input field and the image */
+}
+#submit {
+    border-radius: 20px; /* Make the button circular */
+    padding: 10px 20px; /* Add padding to make the button larger */
+    border: none; /* Remove the border */
+    background-color: #1B4375; /* Change the background color */
+    color: white; /* Change the text color */
+    cursor: pointer; /* Add a pointer cursor */
+    margin: 50px;
+    transition: background-color 0.3s; /* Add a smooth transition for hover effect */
+}
+
+#submit:hover {
+    background-color: #0056b3; /* Change the background color on hover */
+}
+@media only screen and (min-width: 500px) {
+    .icon {
+        margin-left: auto; /* Move the image to the right */
+        margin-right: auto; /* Move the image to the right */
+        display: block; /* Ensure the image is displayed as a block element */
+    }
+}
+body {
+    background-image: linear-gradient(to bottom right, #1B4375, #D9D9D9);
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
