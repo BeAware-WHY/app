@@ -1,11 +1,20 @@
 import './App.css'
-import Signin from './components/pages/Signin/Signin'
+import SignIn from './components/pages/Signin/Signin'
+import SignUp from './components/pages/Signup/Signup'
+import { ReactDOM } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom' 
 
 function App() {
   return (
-    <div>
-      <Signin/>
-    </div>
+    <BrowserRouter>
+    <Routes>
+      <Route>
+      <Route path='' element={<SignIn/>}></Route>
+      <Route path='/signin' element={<SignIn/>}></Route>
+      <Route path='/signup' element={<SignUp/>}></Route>
+      </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
