@@ -81,7 +81,7 @@ const Signin = () => {
               />
               <label>Remember me</label>
               </div>
-              <label style={{ fontFamily: 'Poppins, sans-serif' }}>Forget Password</label>
+              <label style={{ fontFamily: 'Poppins, sans-serif' }} onClick={()=> window.location='/forgetpassword'}>Forget Password</label>
             </div>
 
             <Button text="Login" onClick={handleLogin} />
