@@ -1,49 +1,39 @@
-import React from 'react';
+import React, { useState } from "react";
+import InputField from "../../resources/Input/input_field";
+import Button from "../../resources/Button/button";
 
 const ForgetPassword = () => {
-  const redirectToForgetPasswordReview = () => {
-    window.location.href = "forgetpasswordreview.html";
-  };
+  const [email, setEmail] = useState("");
 
-  const validateEmail = () => {
-    var emailInput = document.getElementById('email');
-    var email = emailInput.value;
-    var pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if (!pattern.test(email)) {
-      alert('Please enter a valid email address.');
-      emailInput.focus();
-      return false;
-    }
-
-    // Continue with form submission or other actions
-    return true;
-  };
 
   return (
-    <html>
-      <head>
-        <title>Icon inside Input Field - Demo Preview</title>
-        <meta content="noindex, nofollow" name="robots" />
-        <link href="forgetpass.css" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/fontawesome.min.css" />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-      </head>
-      <body>
-        <div className="card">
-          <div className="container">
-            <label><strong>Reset your password</strong></label>
-            <label>Type in your registered email to reset your password</label>
-            <label>Email</label>
-            <input id="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" placeholder="Enter your Email" className="placeicon" type="text" />
-            <br />
-            <input id="submit" type="submit" value="Submit" onClick={redirectToForgetPasswordReview} />
-          </div>
+    <div className="font-face-gm">
+      <div className="login-container">
+        <div className="login-form">
+          <p className="signin-txt">Forget your Password</p>
+          <p className="no-account">Type in your registered email to reset your password</p>
+          <form>
+            <label className="label">Email</label>
+            <InputField
+              type="email"
+              placeholder="Enter your email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+         <Button text="Next" onClick={()=> window.location.href='/forgetpasswordnext'} />
+
+          </form>
         </div>
-        <img src="pic_img.png" alt="Image" className="icon" />
-      </body>
-    </html>
+        <div className="login-image">
+          <img
+            src="./src/assets/images/login_page_image.png"
+            alt="Login Image"
+          />
+        </div>
+      </div>
+    </div>
   );
-}
+};
 
 export default ForgetPassword;
