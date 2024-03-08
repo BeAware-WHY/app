@@ -27,13 +27,16 @@ body {
 /* Style for login form */
 .login-form {
   width: 36%;
-  height: 50%;
-  padding: 50px;
+  height: 60%;
+  padding: 10px;
   background-color: #D9D9D9;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin: 0;
-  padding: 10;
+  padding-right: 30px;
+  padding-left: 30px;
+  padding-top: 18px;
+  padding-bottom: 18px;
   }
 
 /* Style for login image */
@@ -45,13 +48,14 @@ body {
 .signin-txt{
   font-weight: bolder;
   font-size: 20px;
+  margin-bottom: 0px;
   font-family: 'Poppins', sans-serif;
 }
 
 .no-account{
   
   font-family: 'Poppins', sans-serif;
-  margin-bottom: 4px;
+  margin-top: 0px;
   font-size: small;
 }
 
@@ -69,7 +73,13 @@ body {
   font-weight: 500;
   font-size: x-small;
   color: #000842;
-  margin-top: 20px;
+  padding: 0%;
+  margin-top: 100px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px ;
+
+  
 }
 
 .name{
@@ -123,6 +133,28 @@ body {
 }
 
 
+.rounded-button {
+  border: none;
+  border-radius: 30px;
+  background-color: #1B4375; /* Green */
+  color: white;
+  padding: 0px 0px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;  
+  transition-duration: 0.4s;
+  cursor: pointer;
+  width: 100%;
+  height: 30px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rounded-button:hover {
+  background-color: #45a049; /* Darker Green */
+}
 
 
 /* Media queries for responsiveness */
