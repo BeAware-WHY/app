@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import InputField from "../../resources/Input/input_field";
+
 import Button from "../../resources/Button/button";
 
 const forgetpasswordreview = () => {
@@ -15,7 +14,9 @@ const forgetpasswordreview = () => {
       <div className="login-container">
         <div className="login-form">
           <p className="signin-txt">Recovery Email Sent !</p>
+          <h1></h1>
           <p className="no-account">Please check your email for next steps to reset your password</p>
+          <h1></h1>
           <form>          
             {/* <label className="label">Password</label>
             <InputField
@@ -26,9 +27,12 @@ const forgetpasswordreview = () => {
             /> */}
 
             <Button text="CONTACT SUPPORT" onClick={handleNext} />
+            <h1></h1>
             
             <Button text="BACK TO LOGIN"  onClick={() => window.location.href='/signup'} />
           </form>
+          <h1></h1>
+          <h1></h1>
         </div>
         <div className="login-image">
           <img

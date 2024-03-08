@@ -1,16 +1,42 @@
+
+
 import "./Signup.css";
+
+
 import React from "react";
 import "./Signup.css"; // Import CSS file for styling
 import InputField from "../../resources/Input/input_field";
-import Button from "../../resources/Button/button";
 import { useState } from "react";
 import SwitchSelector from "react-switch-selector";
 
+import { database } from '../firebase';
+import { createUserWithEmailAndPassword } from "firebase/auth"
+import { useNavigate } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
+
 const Signup = () => {
-  const handleLogin = () => {
-    // Handle login functionality
+ 
+  const history = useNavigate();
+ 
+  const handleSubmit = (e) => {
+
+    const email = e.target.email.value
+    const password = e.target.email.value
+
+    
+    createUserWithEmailAndPassword(database, email, password).then(data=>{
+      console.log(data, "authData");
+      console.log("Login clicked");
+      
+      history("/signin")
+    }) 
+
     console.log("Login clicked");
   };
+
+  const onBtnClick = () => {
+    <Link to="/signin"></Link>
+  }
 
   const [isChecked, setIsChecked] = useState(() => false);
 
@@ -70,35 +96,28 @@ const Signup = () => {
             </span>
           </p>
 
-          <form>
+          <form onSubmit={(e)=>handleSubmit(e)}>
 
             <div style={{ display: "flex", marginTop:"10px",  marginBottom: "-5px", justifyContent:"space-between"   }}>
               <div style={{ marginRight: "1rem" }}>
-                <label className="label">First Name</label>
-                <InputField type="text" placeholder="Enter your First Name" />
+                <label className="label">First Name</label>    
+                <input className="input-field-style" type="text" placeholder="Enter your First Name"/> 
               </div>
               <div style={{margin: 0, marginTop:0}}>
                 <label className="label">Last Name</label>
-                <InputField type="text" placeholder="Enter your Last Name" />
+               
+                <input className="input-field-style" type="text" placeholder="Enter your Last Name"/> 
               </div>
             </div>
 
             <label className="label">Email</label>
-            <InputField type="email" placeholder="Enter your email address" />
-
-            <div style={{ display: "flex", justifyContent:"space-between"   }}>
-              <div style={{ marginRight: "1rem" }}>
-                <label className="label">Country</label>
-                <InputField type="text" placeholder="Select country" />
-              </div>
-              <div>
-                <label className="label">Phone</label>
-                <InputField type="text" placeholder="Enter phone number" />
-              </div>
-            </div>
+           
+            
+            <input className="input-field-style" type="email" placeholder="Enter your email address"/> 
 
             <label className="label">Password</label>
-            <InputField type="password" placeholder="Enter your password" />
+           
+            <input className="input-field-style" type="password" placeholder="Enter your password"/> 
 
             <div className="frgt-pass">
               <div className="chkbox">
@@ -119,7 +138,7 @@ const Signup = () => {
            
 
            
-    <button  className="rounded-button">Next</button>
+    <button  className="rounded-button" onSubmit={onBtnClick} >Next</button>
     
 
           </form>

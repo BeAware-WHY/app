@@ -4,14 +4,29 @@ import InputField from "../../resources/Input/input_field";
 import Button from "../../resources/Button/button";
 import { useState } from "react";
 import SwitchSelector from "react-switch-selector";
+import { database } from '../firebase';
+import { createUserWithEmailAndPassword } from "firebase/auth"
 
+
+ // Import Firebase configuration
+
+  
 
 const Signin = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // Handle login functionality
-    console.log("Login clicked");
+  const handleLogin = async () => {
+    try {
+      await UserAuthContextProvider.l(email, password);
+      // Login successful, handle redirection or other actions
+    } catch (error) {
+      // Handle login error
+      console.error('Login failed:', error.message);
+    }
   };
+
+  
 
   const [isChecked, setIsChecked] = useState(() => false);
 
@@ -83,6 +98,7 @@ const Signin = () => {
               </div>
               <label style={{ fontFamily: 'Poppins, sans-serif' }} onClick={()=> window.location='/forgetpassword'}>Forget Password</label>
             </div>
+            
 
             <Button text="Login" onClick={handleLogin} />
           </form>
