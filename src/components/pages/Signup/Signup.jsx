@@ -1,71 +1,115 @@
-
-
 import "./Signup.css";
-
-
 import React from "react";
 import "./Signup.css"; // Import CSS file for styling
-import InputField from "../../resources/Input/input_field";
 import { useState } from "react";
 import SwitchSelector from "react-switch-selector";
-
-import { database } from '../firebase';
-import { createUserWithEmailAndPassword } from "firebase/auth"
+import { db, auth } from "../firebase"; 
+import { addDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { Outlet, Link } from "react-router-dom";
+import Button from "../../resources/Button/button";
 
 const Signup = () => {
- 
-  const history = useNavigate();
- 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
 
-    const email = e.target.email.value
-    const password = e.target.email.value
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
 
-    
-    createUserWithEmailAndPassword(database, email, password).then(data=>{
-      console.log(data, "authData");
-      console.log("Login clicked");
-      
-      history("/signin")
-    }) 
-
-    console.log("Login clicked");
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked); // Toggle the checkbox state
   };
 
-  const onBtnClick = () => {
-    <Link to="/signin"></Link>
-  }
 
-  const [isChecked, setIsChecked] = useState(() => false);
+  const validateInputs = () => {
+    if (firstName.trim() === "") {
+      alert("Please enter your First Name");
+      return false;
+    }
+  
+    if (lastName.trim() === "") {
+      alert("Please enter your Last Name");
+      return false;
+    }
+  
+    if (!email || !email.includes("@")) {
+      alert("Please enter a valid email address");
+      return false;
+    }
+  
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters long");
+      return false;
+    }
+  
+    if (!isChecked) {
+      alert("Please agree to the Terms and Privacy Policy");
+      return false;
+    }
+  
+    return true; // All validations passed
+  };
+  
+  const handleSubmitWithValidations = async () => {
+    if (!validateInputs() || !isChecked) {
+      return; // Exit function if validation fails or checkbox is not checked
+    }
+  
+    try {
+    
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+  
+      console.log("Login successful");
+      alert("Your account is created successfully!!");
+  
+
+     
+        await addDoc(collection(db, "users"), {
+          uid: user.uid,
+          firstName,
+          lastName,
+          authProvider: "local",
+          email,
+        }).then(()=> {
+       
+            console.error(err);
+            alert(err.message);
+            navigate("/createstream"),
+            setIsSubmitted(isSubmitted)
+          
+        });
+      
+      
+    } catch (error) {
+      console.error("Error creating user:", error);
+    }
+};
 
   const options = [
     {
-      label: "Signin",
-      value: "Signin",
-
-      selectedBackgroundColor: "#1B4375",
-      selectedFontColor: "#ffffff",
+        label: "Sign in",
+        value: "Sign in",
+        selectedBackgroundColor: "#1B4375",
+        selectedFontColor: "#ffffff"
     },
     {
-      label: "Signup",
-
-      value: {
-        Signup: true,
-      },
-
-      selectedBackgroundColor: "#1B4375",
-      selectedFontColor: "#ffffff",
-    },
-  ];
-
+        label: "Sign up",
+        value:  "Sign up",
+        selectedBackgroundColor: "#1B4375",
+        selectedFontColor:"#ffffff"
+    }
+ ];
+ 
   const onChange = (newValue) => {
     console.log(newValue);
   };
 
   const initialSelectedIndex = options.findIndex(
-    ({ value }) => value === "Signup"
+    ({ value }) => value === "Sign up"
   );
 
   return (
@@ -81,44 +125,76 @@ const Signup = () => {
               fontColor={"#000000"}
               selectedBackgroundColor={"#1B4375"}
               fontFamily="Poppins, sans-serif"
-              selectionIndicatorMargin={5}
+              selectionIndicatorMargin={6}           
             />
           </div>
           <p className="signin-txt">Sign Up</p>
           <p className="no-account">
             If you have already registered.
-            <span
-              className="register-here"
-              onClick={() => (window.location.href = "/signin")}
-            >
-              {" "}
+            <span className="register-here" onClick={() => navigate("/signin")}>
               Click here!
             </span>
           </p>
 
-          <form onSubmit={(e)=>handleSubmit(e)}>
-
-            <div style={{ display: "flex", marginTop:"10px",  marginBottom: "-5px", justifyContent:"space-between"   }}>
+          <form onSubmit={handleSubmitWithValidations}>
+            <div
+              style={{
+                display: "flex",
+                marginTop: "10px",
+                marginBottom: "-5px",
+                justifyContent: "space-between",
+              }}
+            >
               <div style={{ marginRight: "1rem" }}>
-                <label className="label">First Name</label>    
-                <input className="input-field-style" type="text" placeholder="Enter your First Name"/> 
+                <label className="label">First Name</label>
+                <input
+                  className="input-field-style"
+                  type="text"
+                  name="firstName"
+                  placeholder="Enter your First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                ></input>
               </div>
-              <div style={{margin: 0, marginTop:0}}>
+              <div style={{ margin: 0, marginTop: 0 }}>
                 <label className="label">Last Name</label>
-               
-                <input className="input-field-style" type="text" placeholder="Enter your Last Name"/> 
+
+                <input
+                  className="input-field-style"
+                  type="text"
+                  name="lastName"
+                  placeholder="Enter your Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                ></input>
               </div>
             </div>
 
             <label className="label">Email</label>
-           
-            
-            <input className="input-field-style" type="email" placeholder="Enter your email address"/> 
+
+            <input
+              className="input-field-style"
+              type="email"
+              name="email"
+              placeholder="Enter your email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            ></input>
 
             <label className="label">Password</label>
-           
-            <input className="input-field-style" type="password" placeholder="Enter your password"/> 
 
+            <input
+              className="input-field-style"
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            ></input>
             <div className="frgt-pass">
               <div className="chkbox">
                 <input
@@ -126,22 +202,19 @@ const Signup = () => {
                   type="checkbox"
                   checked={isChecked}
                   name="lsRememberMe"
-                  onChange={(e) => setIsChecked(e.target.checked)}
+                  onChange={handleCheckboxChange}
                 />
                 <label> I agree to all the Terms and Privacy Policy </label>
               </div>
-              <label style={{ fontFamily: "Poppins, sans-serif" }}>
-                Forget Password
-              </label>
+             
             </div>
 
-           
-
-           
-    <button  className="rounded-button" onSubmit={onBtnClick} >Next</button>
-    
-
+            <Button
+              text={"Next"}
+              onClick={handleSubmitWithValidations}
+            ></Button>
           </form>
+          {isSubmitted && <p>Sign up successful! Thank you for registering.</p>}
         </div>
         <div className="login-image">
           <img

@@ -116,9 +116,8 @@ body {
 .switch{
   font-family: 'Poppins', sans-serif;
   height: 36px;
-  
-  margin-left: 30px;
-  margin-right: 30px;
+  margin-left: 40px;
+  margin-right: 40px;
   align-content: center;
   justify-content: center;
   align-items: center;
@@ -149,9 +148,7 @@ body {
   margin-bottom: 20px;
   color: #000842;
   background-color: #D9D9D9;
-  
-
-}
+  }
 
 .rounded-button {
   border: none;

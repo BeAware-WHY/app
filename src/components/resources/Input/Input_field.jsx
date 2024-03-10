@@ -1,22 +1,18 @@
 import React from "react";
 import './Input_field.css'
 
-const InputField = ({label,type,placeholder, value, onChange}) => {
+const InputField = ({ type, placeholder, name, value }) => {
     return (
-        <div className="input">
-            
-            <input 
-                className="input-field-style"
-                type={type}
-                placeholder={placeholder}
-                value={value}
-                onChange={onChange}            
-            /> 
-            
-
-        </div>
+      <input
+        className="input-field-style"
+        type={type}
+        name={name} // Pass down the 'name' prop
+        value={value}
+        placeholder={placeholder}
+      />
     );
-}
+  };
+  
 
 export default InputField;
 
