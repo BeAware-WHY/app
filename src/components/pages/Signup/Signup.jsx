@@ -3,16 +3,18 @@ import React from "react";
 import "./Signup.css"; // Import CSS file for styling
 import { useState } from "react";
 import SwitchSelector from "react-switch-selector";
-import { db, auth } from "../firebase"; 
-import { addDoc } from "firebase/firestore";
+import { database, auth } from "../firebase";
+import { setDoc, doc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import Button from "../../resources/Button/button";
+import Loader from "../../resources/Loader/loader";
 
 const Signup = () => {
   const navigate = useNavigate();
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,87 +25,105 @@ const Signup = () => {
     setIsChecked(!isChecked); // Toggle the checkbox state
   };
 
-
   const validateInputs = () => {
     if (firstName.trim() === "") {
       alert("Please enter your First Name");
       return false;
     }
-  
+
     if (lastName.trim() === "") {
       alert("Please enter your Last Name");
       return false;
     }
-  
+
     if (!email || !email.includes("@")) {
       alert("Please enter a valid email address");
       return false;
     }
-  
-    if (password.length < 6) {
+
+    if (password.length < 5) {
       alert("Password must be at least 6 characters long");
       return false;
     }
-  
+
     if (!isChecked) {
       alert("Please agree to the Terms and Privacy Policy");
       return false;
     }
-  
+
     return true; // All validations passed
   };
-  
-  const handleSubmitWithValidations = async () => {
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
     if (!validateInputs() || !isChecked) {
       return; // Exit function if validation fails or checkbox is not checked
     }
-  
-    try {
-    
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-  
-      console.log("Login successful");
-      alert("Your account is created successfully!!");
-  
 
-     
-        await addDoc(collection(db, "users"), {
-          uid: user.uid,
-          firstName,
-          lastName,
-          authProvider: "local",
-          email,
-        }).then(()=> {
-       
-            console.error(err);
-            alert(err.message);
-            navigate("/createstream"),
-            setIsSubmitted(isSubmitted)
-          
+    setIsLoading(true); // Set loading state to true
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const formData = {
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        password: password,
+        uid: userCredential.user.uid
+      };
+
+      // Store user data in Firestore with user's UID as document ID
+      //await setDoc(doc(database, "users", userCredential.user.uid), formData);
+
+      await setDoc(doc(database, "users", userCredential.user.uid), formData)
+        .then(() => {
+          // User signed up and data stored successfully
+          console.log("User signed up and data stored successfully");
+
+          // Log in the user
+          signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+              // Login successful
+              console.log("Login successful");
+
+              navigate("/createstream");
+            })
+            .catch((error) => {
+              console.error("Error logging in:", error);
+            });
+        })
+        .catch((error) => {
+          console.error("Error storing user data:", error);
         });
-      
-      
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.error("Error signing up:", error.message);
+    } finally {
+      setIsLoading(false); // Set loading state to false after signup process completes
     }
-};
+  };
 
   const options = [
     {
-        label: "Sign in",
-        value: "Sign in",
-        selectedBackgroundColor: "#1B4375",
-        selectedFontColor: "#ffffff"
+      label: "Sign in",
+      value: "Sign in",
+      selectedBackgroundColor: "#1B4375",
+      selectedFontColor: "#ffffff",
     },
     {
-        label: "Sign up",
-        value:  "Sign up",
-        selectedBackgroundColor: "#1B4375",
-        selectedFontColor:"#ffffff"
-    }
- ];
- 
+      label: "Sign up",
+      value: "Sign up",
+
+      selectedBackgroundColor: "#1B4375",
+      selectedFontColor: "#ffffff",
+    },
+  ];
+
   const onChange = (newValue) => {
     console.log(newValue);
   };
@@ -111,6 +131,11 @@ const Signup = () => {
   const initialSelectedIndex = options.findIndex(
     ({ value }) => value === "Sign up"
   );
+
+  // Render loader if isLoading is true
+  if (isLoading) {
+    return <div className="loader">{Loader}</div>;
+  }
 
   return (
     <div className="font-face-gm">
@@ -125,7 +150,9 @@ const Signup = () => {
               fontColor={"#000000"}
               selectedBackgroundColor={"#1B4375"}
               fontFamily="Poppins, sans-serif"
-              selectionIndicatorMargin={6}           
+              selectionIndicatorMargin={6}
+              disabled={false}
+              forcedSelectedIndex={1}
             />
           </div>
           <p className="signin-txt">Sign Up</p>
@@ -136,7 +163,7 @@ const Signup = () => {
             </span>
           </p>
 
-          <form onSubmit={handleSubmitWithValidations}>
+          <form onSubmit={handleSignup}>
             <div
               style={{
                 display: "flex",
@@ -206,15 +233,10 @@ const Signup = () => {
                 />
                 <label> I agree to all the Terms and Privacy Policy </label>
               </div>
-             
             </div>
 
-            <Button
-              text={"Next"}
-              onClick={handleSubmitWithValidations}
-            ></Button>
+            <Button text={"Next"} onClick={handleSignup}></Button>
           </form>
-          {isSubmitted && <p>Sign up successful! Thank you for registering.</p>}
         </div>
         <div className="login-image">
           <img

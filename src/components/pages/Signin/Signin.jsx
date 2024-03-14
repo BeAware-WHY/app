@@ -1,44 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Signin.css";
 import Button from "../../resources/Button/button";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import SwitchSelector from "react-switch-selector";
+import Loader from "../../resources/Loader/loader";
 
 const Signin = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isChecked, setIsChecked] = useState(() => false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
-  const handleSubmitWithValidations = () => {
+  const handleLogin = () => {
     // Basic validation for Email
     if (!email || !email.includes("@")) {
       alert("Please enter a valid email address");
       return;
     }
-
+  
     // Basic validation for Password
     if (password.length < 6) {
       alert("Password must be at least 6 characters long");
       return;
     }
-
+  
+    setIsLoading(true); // Set loading state to true
+  
+    // Log in the user
     signInWithEmailAndPassword(auth, email, password)
-      .then((data) => {
-        console.log(data, "authData");
-        setIsSubmitted(true);
-        console.log("Login successful");
+      .then(() => {
+        // Login successful
+        alert("Login successful");
         navigate("/createstream");
-        // Redirect to dashboard after successful login
       })
       .catch((error) => {
-        console.error("Error logging in:", error);
-    });
+        // Handle login error
+        if (error.code === "auth/wrong-password") {
+          alert("Incorrect email or password");
+        } else {
+          //console.error
+          alert("Error logging in:", error);
+        }
+      })
+      .finally(() => {
+        setIsLoading(false); // Set loading state to false
+      });
   };
 
   const options = [
@@ -51,7 +61,6 @@ const Signin = () => {
     {
       label: "Sign up",
       value: "Sign up",
-
       selectedBackgroundColor: "#1B4375",
       selectedFontColor: "#ffffff",
     },
@@ -94,9 +103,8 @@ const Signin = () => {
               Register here!
             </span>
           </div>
-          <form onSubmit={handleSubmitWithValidations}>
+          <form onSubmit={handleLogin}>
             <label className="label">Email</label>
-
             <input
               className="input-field-style"
               type="email"
@@ -105,10 +113,9 @@ const Signin = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-            ></input>
+            />
 
             <label className="label">Password</label>
-
             <input
               className="input-field-style"
               type="password"
@@ -117,7 +124,7 @@ const Signin = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-            ></input>
+            />
 
             <div className="frgt-pass">
               <div className="chkbox">
@@ -138,18 +145,12 @@ const Signin = () => {
               </label>
             </div>
 
-            <Button
-              text={"Login"}
-              onClick={handleSubmitWithValidations}
-            ></Button>
+            <Button text={"Login"} onClick={handleLogin} />
           </form>
-          {isSubmitted && <p>Sign up successful! Thank you for registering.</p>}
+          {isLoading && <Loader />} {/* Display loader if isLoading is true */}
         </div>
         <div className="login-image">
-          <img
-            src="./src/assets/images/login_page_image.png"
-            alt="Login Image"
-          />
+          <img src="./src/assets/images/login_page_image.png" alt="Login Image" />
         </div>
       </div>
     </div>
