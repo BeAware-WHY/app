@@ -1,7 +1,7 @@
 
 import Button from "../../resources/Button/button";
 
-const forgetpasswordreview = () => {
+const forgetpasswordnext = () => {
 
   const handleNext = () => {
     // Handle next functionality
@@ -10,12 +10,12 @@ const forgetpasswordreview = () => {
   };
 
   return (
-    <div className="font-face-gm">
-      <div className="login-container">
-        <div className="login-form">
-          <p className="signin-txt">Recovery Email Sent !</p>
+    <div className="font-face-gmforget">
+      <div className="login-containerforget">
+        <div className="login-formforget">
+          <p className="signin-txtforget">Recovery Email Sent !</p>
           <h1></h1>
-          <p className="no-account">Please check your email for next steps to reset your password</p>
+          <p className="no-accountforget">Please check your email for next steps to reset your password</p>
           <h1></h1>
           <form>          
             {/* <label className="label">Password</label>
@@ -34,7 +34,7 @@ const forgetpasswordreview = () => {
           <h1></h1>
           <h1></h1>
         </div>
-        <div className="login-image">
+        <div className="login-imageforget">
           <img
             src="./src/assets/images/login_page_image.png"
             alt="Login Image"
@@ -45,4 +45,4 @@ const forgetpasswordreview = () => {
   );
 };
 
-export default forgetpasswordreview;
+export default forgetpasswordnext;

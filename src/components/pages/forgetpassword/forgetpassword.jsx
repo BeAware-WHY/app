@@ -1,75 +1,98 @@
 import React, { useState } from "react";
-import InputField from "../../resources/Input/input_field";
-import "./forgetpass.css";
-
+import "./forgetpass.css"; // Assuming you have a CSS file for styling
+import Button from "../../resources/Button/button";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const ForgetPassword = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmitWithValidations = () => {
+  // Basic validation for Email
+  if (!email || !email.includes("@")) {
+    alert("Please enter a valid email address");
+    return;
+  }
+
+  console.log("Sending password reset email to:", email);
+
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      setIsSubmitted(true);
+      console.log("Password reset email sent successfully");
+      navigate("/forgetpasswordnext"); // Navigate to the next screen
+    })
+    .catch((error) => {
+      console.error("Error sending password reset email:", error);
+    });
+};
+
+  const options = [
+    {
+      label: "Reset Password",
+      value: "Reset Password",
+      selectedBackgroundColor: "#1B4375",
+      selectedFontColor: "#ffffff",
+    },
+  ];
+
+  const onChange = (newValue) => {
+    console.log(newValue);
+  };
+
+  const initialSelectedIndex = options.findIndex(
+    ({ value }) => value === "Reset Password"
+  );
 
   return (
-    <div className="font-face-gm">
-      <div className="login-container">
-        <div className="login-form">
-          <p className="signin-txt">Forget your Password</p>
-          <p className="no-account">
+    <div className="font-face-gmforget">
+      <div className="login-containerforget">
+        <div className="login-formforget">
+   
+          <p className="signin-txtforget">Reset Password</p>
+          <p className="no-accountforget">
             Type in your registered email to reset your password
           </p>
-          <form>
-            <label className="label">Email</label>
-            <InputField
+          <form onSubmit={handleSubmitWithValidations}>
+            <label className="labelforget">Email</label>
+            <input
+              className="input-field-style"
               type="email"
+              name="email"
               placeholder="Enter your email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
-
-            <div className="text">
-              <text
-                className="register-here"
-                onClick={() => (window.location.href = "/forgetpasswordreview")}
-              >
-                Next
-              </text>
-            </div>
-
-            <button
-              style={{
-                border: "none",
-                borderRadius: "30px",
-                backgroundColor: "#1B4375",
-                color: "white",
-                padding: "0px 0px",
-                textAlign: "center",
-                textDecoration: "none",
-                display: "inline-block",
-                fontSize: "16px",
-                fontFamily: "Poppins, sans-serif",
-                transitionDuration: "0.4s",
-                cursor: "pointer",
-                width: "100%",
-                height: "30px",                
-              }}
-            >            
-              <text
-                onClick={() => {
-                  window.location.href = "/forgetpasswordreview";
-                }}
-              >
-                Next
-              </text>
-            </button>
-
+            
+            <Button
+              text={"Next"}
+              onClick={handleSubmitWithValidations}
+            />
+            <div className="bll">
+  <label className="label-back-to-login">Back to Login</label>
+</div>
           </form>
-
+          {isSubmitted && (
+            <p>
+              Password reset email sent! Please check your email for further
+              instructions.
+            </p>
+          )}
         </div>
-        <div className="login-image">
+        <div className="login-imageforget">
           <img
-            src="./src/assets/images/login_page_image.png"
+            src="./src/assets/images/forgetpass_image.png"
             alt="Login Image"
           />
         </div>
       </div>
     </div>
+    
   );
 };
 
