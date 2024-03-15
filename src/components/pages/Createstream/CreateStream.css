@@ -171,18 +171,19 @@
 
 #root {
     padding: 0 !important; /* Override root padding and set it to 0 */
+    
   }
   
-  body {
+ body{
+    margin: 0px !important;
+ }
+  .background {
     margin: 0;
     padding: 0;
     background-color: #1B4375; /* Set background color of the whole screen */
     position: relative;
     height: 100%; /* Set the height of the body to 100% */
     overflow-y: auto;
-  }
-  
-  .background {
     height: 100vh;
   }
   
@@ -191,7 +192,7 @@
     justify-content: space-between;
     align-items: center;
     background-color: transparent; /* Make navbar transparent */
-    padding: 20px;
+    padding: 20px 50px;
   }
   
   .navbar-logo img {
