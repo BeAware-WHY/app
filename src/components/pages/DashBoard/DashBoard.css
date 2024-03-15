@@ -1,0 +1,111 @@
+.image-corner-left-currentstream {
+    position: absolute;
+    bottom: 0;
+    left: 159px;
+  }
+  
+  .image-corner-left-currentstream img {
+    width: 300px; /* Make the image responsive */
+    max-width: 400px; /* Ensure the image does not exceed its container */
+    height: auto; /* Maintain aspect ratio */
+    opacity: 0.8;
+  }
+
+  .stream-card-container-currentstream {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+  }
+  
+  .stream-card-currentstream {
+    width: 780px;
+    height: 320px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.45);
+    border-radius: 10px;
+    display: flex;
+  }
+
+  .new-stream-button {
+    position: relative;
+
+    background-color: #E5E5E5;
+    color: black;
+    /* left: 450px; */
+    /* border: none; */
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-left: 800px; /* Add margin to separate from navbar-profile */
+    cursor: pointer;
+    display: block;
+    z-index: 999;
+}
+
+.new-stream-button:hover {
+    background-color: #a8a7a7;
+}
+
+.activeButton {
+  background-color: #1B4375;
+  border-radius: 35px;
+  height: 50px;
+  width: 200px;
+  border: none;
+  transition: 0.5s ease;
+  cursor: pointer;
+  color: #E5E5E5;
+  font-size: 14px;
+}
+
+.inactiveButton {
+  background-color: #E5E5E5;
+  border-radius: 35px;
+  height: 50px;
+  width: 200px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+.toggle-button-bg{
+    position: relative;
+    border-radius: 35px;
+    height: 50px;
+    background-color: #E5E5E5;
+    width: 250px;
+    display: flex;
+    justify-content: center;
+    padding: 7px;
+    /* font-size: 20px; */
+}
+
+.stream-buttons{
+    display: flex;
+    justify-content: center;
+}
+
+.logo-placeholder-currentstream {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #CADBEC; /* Placeholder background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    /* border-style: dashed; */
+    /* overflow: hidden; */
+  }
+  
+  .logo-placeholder-currentstream img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 50%;
+    font-size: 12px;
+  }
+
+.currentstream-main{
+    
+}

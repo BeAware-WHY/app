@@ -124,8 +124,8 @@ const Signup = () => {
     },
   ];
 
-  const onChange = (newValue) => {
-    console.log(newValue);
+  const onChange = () => {
+    navigate('/Signin');
   };
 
   const initialSelectedIndex = options.findIndex(
@@ -152,7 +152,6 @@ const Signup = () => {
               fontFamily="Poppins, sans-serif"
               selectionIndicatorMargin={6}
               disabled={false}
-              forcedSelectedIndex={1}
             />
           </div>
           <p className="signin-txt">Sign Up</p>

@@ -9,48 +9,55 @@ import Loader from "../../resources/Loader/loader";
 
 const Signin = () => {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
-  const handleLogin = () => {
-    // Basic validation for Email
-    if (!email || !email.includes("@")) {
-      alert("Please enter a valid email address");
-      return;
+  const handleLogin = async (e) => {
+    e.preventDefault();
+  
+    try {
+      // Validate email
+      if (!email || !email.includes("@")) {
+        setEmailError("Please enter a valid email address");
+        return;
+      } else {
+        setEmailError("");
+      }
+  
+      // Validate password
+      if (password.length < 6) {
+        setPasswordError("Password must be at least 6 characters long");
+        return;
+      } else {
+        setPasswordError("");
+      }
+  
+      setIsLoading(true);
+  
+      // Attempt sign-in
+      await signInWithEmailAndPassword(auth, email, password);
+  
+      // Navigate on successful sign-in
+      navigate("/createstream");
+    } catch (error) {
+      // Handle sign-in errors
+      if (error.code === "auth/wrong-password" || error.code === "auth/user-not-found") {
+        setPasswordError("Incorrect email or password");
+      } else if (error.code === "auth/invalid-credential") {
+        alert("Invalid credentials. Please check your email and password.");
+      } else {
+        console.error("Error logging in:", error.message);
+        alert("An unexpected error occurred. Please try again later.");
+      }
+    } finally {
+      setIsLoading(false);
     }
-  
-    // Basic validation for Password
-    if (password.length < 6) {
-      alert("Password must be at least 6 characters long");
-      return;
-    }
-  
-    setIsLoading(true); // Set loading state to true
-  
-    // Log in the user
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        // Login successful
-        alert("Login successful");
-        navigate("/createstream");
-      })
-      .catch((error) => {
-        // Handle login error
-        if (error.code === "auth/wrong-password") {
-          alert("Incorrect email or password");
-        } else {
-          //console.error
-          alert("Error logging in:", error);
-        }
-      })
-      .finally(() => {
-        setIsLoading(false); // Set loading state to false
-      });
   };
-
+  
   const options = [
     {
       label: "Sign in",
@@ -66,13 +73,11 @@ const Signin = () => {
     },
   ];
 
-  const onChange = (newValue) => {
-    console.log(newValue);
+  const onChange = () => {
+    navigate('/Signup');
   };
 
-  const initialSelectedIndex = options.findIndex(
-    ({ value }) => value === "Sign in"
-  );
+  const initialSelectedIndex = options.findIndex(({ value }) => value === "Sign in");
 
   return (
     <div className="font-face-gm">
@@ -89,7 +94,7 @@ const Signin = () => {
               fontFamily="Poppins, sans-serif"
               selectionIndicatorMargin={6}
               disabled={false}
-              forcedSelectedIndex={0}
+            
             />
           </div>
           <p className="signin-txt">Sign In</p>
@@ -114,6 +119,7 @@ const Signin = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {emailError && <p className="error-message">{emailError}</p>}
 
             <label className="label">Password</label>
             <input
@@ -125,6 +131,7 @@ const Signin = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            {passwordError && <p className="error-message">{passwordError}</p>}
 
             <div className="frgt-pass">
               <div className="chkbox">
@@ -138,6 +145,7 @@ const Signin = () => {
                 <label>Remember me</label>
               </div>
               <label
+                className="register-here"
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={() => (window.location = "/forgetpassword")}
               >
