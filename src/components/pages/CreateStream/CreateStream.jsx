@@ -20,9 +20,6 @@ function CreateStream() {
     const handleCancel = () => {
         navigate('/dashboard');
     };
-    const handleCreate = () => {
-        navigate('/dashboard');
-    };
 
     const toggleProfile = () => {
         setProfileClicked(!profileClicked);
@@ -176,7 +173,7 @@ function CreateStream() {
                                     ></textarea>
                                     <div className="buttons">
                                         <button type="button" className="eventbutton" onClick={handleCancel}>Cancel</button>
-                                        <button type="submit" className="eventbutton" onClick={handleCreate}>Create</button>
+                                        <button type="submit" className="eventbutton">Create</button>
                                     </div>
                                 </form>
                             </div>
