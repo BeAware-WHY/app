@@ -6,21 +6,22 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import SwitchSelector from "react-switch-selector";
 import Loader from "../../resources/Loader/loader";
-import useAuthToken from "../../../constants/useAuthToken";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const Signin = () => {
   const navigate = useNavigate();
-  const { saveToken } = useAuthToken();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    setIsLoading(true); // Set loading state to true
+    e.preventDefault();
+    setIsLoading(true);
 
     // Basic validation for Email and Password
     if (!email || !email.includes("@")) {
@@ -41,23 +42,23 @@ const Signin = () => {
 
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
-      const accessToken = res.user.stsTokenManager.accessToken;
-      saveToken(accessToken);
-      // Login successful
+      // Handle successful login
       navigate("/Dashboard");
-      window.location.reload();
-      // Handle other logic based on the response
     } catch (error) {
       // Handle login error
       if (error.code === "auth/wrong-password") {
         alert("Incorrect email or password");
       } else {
-        console.log("58------", error);
-        alert("Error logging in:", error.message);
+        console.error("Error logging in:", error);
+        alert("Error logging in. Please try again later.");
       }
     } finally {
-      setIsLoading(false); // Set loading state to false
+      setIsLoading(false);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const options = [
@@ -124,15 +125,22 @@ const Signin = () => {
             {emailError && <p className="error-message">{emailError}</p>}
 
             <label className="label">Password</label>
-            <input
-              className="input-field-style"
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="password-input">
+              <input
+                className="input-field-style"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <FontAwesomeIcon
+                icon={showPassword ? faEyeSlash : faEye}
+                className="eye-icon"
+                onClick={togglePasswordVisibility}
+              />
+            </div>
             {passwordError && <p className="error-message">{passwordError}</p>}
 
             <div className="frgt-pass">
@@ -167,4 +175,3 @@ const Signin = () => {
 };
 
 export default Signin;
-

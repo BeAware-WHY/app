@@ -7,6 +7,7 @@ import { database } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { getUserIDFromAuthToken } from './../firebase';
 
+
 function CreateStream() {
     const [profileClicked, setProfileClicked] = useState(false);
     const [streamName, setStreamName] = useState('');

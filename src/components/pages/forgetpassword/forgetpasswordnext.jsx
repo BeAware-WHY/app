@@ -1,11 +1,14 @@
 
 import Button from "../../resources/Button/button";
+import { useNavigate } from "react-router-dom";
 
 const forgetpasswordreview = () => {
-
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const navigate = useNavigate();
+  
   const handleNext = () => {
     // Handle next functionality
-    console.log("Next clicked");
+    navigate('/Signin');
     // Perform validation and other logic here
   };
 
@@ -29,7 +32,7 @@ const forgetpasswordreview = () => {
             <Button text="CONTACT SUPPORT" onClick={handleNext} />
             <h1></h1>
             
-            <Button text="BACK TO LOGIN"  onClick={() => window.location.href='/signup'} />
+            <Button text="BACK TO LOGIN"  onClick={handleNext} />
           </form>
           <h1></h1>
           <h1></h1>
