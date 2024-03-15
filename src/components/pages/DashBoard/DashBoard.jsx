@@ -9,14 +9,48 @@ import { collection, addDoc } from 'firebase/firestore';
 import { database } from '../firebase';
 import { useNavigate } from "react-router-dom";
 
+function CurrentStreamHeading() {
+    return (
+        <div className="generate-stream-text">Ready to make your voice Legible!!</div>
+    );
+}
+
+function PastStreamHeading() {
+    return (
+        <div className="generate-stream-text">History of Streams</div>
+    );
+}
+
 
 function CurrentStream() {
-    return <h1>Current Stream</h1>;
+    return (<div className="currentstream-main">
+        <div className="image-corner-left-currentstream">
+            <img src="./src/assets/images/dashboard.png" alt="personstreamcreate" />
+        </div>
+        <div className="stream-card-container-currentstream">
+            <div className="stream-card-currentstream">
+                <div className="logo-placeholder-currentstream">
+                    <img src="" alt="Company Logo" />
+                </div>
+            </div>
+        </div>
+    </div>
+    );
 }
 
 
 function PastStream() {
-    return <h1>Past Stream</h1>;
+    return (<div className="currentstream-main">
+        <div className="image-corner-left-currentstream">
+            <img src="./src/assets/images/dashboard.png" alt="personstreamcreate" />
+        </div>
+        <div className="stream-card-container-currentstream">
+            <div className="stream-card-currentstream">
+
+            </div>
+        </div>
+    </div>
+    );
 }
 
 
@@ -67,23 +101,14 @@ function DashBoard() {
             <div className="image-corner-right">
                 <img src="./src/assets/images/bgglobe.png" alt="Background Globe" />
             </div>
-            <div>
+            {isCurrentStreamActive ? <CurrentStreamHeading /> : <PastStreamHeading />}
+            <div className="stream-buttons">
                 <div className="toggle-button-bg">
                     <button className={isCurrentStreamActive ? 'activeButton' : 'inactiveButton'} onClick={handleCurrentStreamClick}><b>Current Stream</b></button>
                     <button className={!isCurrentStreamActive ? 'activeButton' : 'inactiveButton'} onClick={handlePastStreamClick}><b>Past Stream</b></button>
                 </div>
-                {isCurrentStreamActive ? <CurrentStream /> : <PastStream />}
             </div>
-
-            <div className="image-corner-left-dashboard">
-                <img src="./src/assets/images/dashboard.png" alt="personstreamcreate" />
-            </div>
-            <div className="generate-stream-text">Ready to make your voice Legible!!</div>
-            <div className="stream-card-container-dashboard">
-                <div className="stream-card-dashboard">
-
-                </div>
-            </div>
+            {isCurrentStreamActive ? <CurrentStream /> : <PastStream />}
         </div>
     );
 }
