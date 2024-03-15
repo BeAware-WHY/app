@@ -20,36 +20,31 @@ const Signin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent default form submission
-  
-    // Basic validation for Email
+    setIsLoading(true); // Set loading state to true
+
+    // Basic validation for Email and Password
     if (!email || !email.includes("@")) {
       setEmailError("Please enter a valid email address");
+      setIsLoading(false);
       return;
     } else {
       setEmailError("");
     }
-  
-    // Basic validation for Password
+
     if (password.length < 6) {
       setPasswordError("Password must be at least 6 characters long");
+      setIsLoading(false);
       return;
     } else {
       setPasswordError("");
     }
-  
-    setIsLoading(true); // Set loading state to true
-  
+
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
       const accessToken = res.user.stsTokenManager.accessToken;
       saveToken(accessToken);
       // Login successful
-      alert("Login successful");
-      
-      
-      // Store the token in localStorage
-      
-      navigate("/createstream");
+      navigate("/CreateStream");
       window.location.reload();
       // Handle other logic based on the response
     } catch (error) {
@@ -64,7 +59,7 @@ const Signin = () => {
       setIsLoading(false); // Set loading state to false
     }
   };
-   
+
   const options = [
     {
       label: "Sign in",
@@ -88,6 +83,7 @@ const Signin = () => {
 
   return (
     <div className="font-face-gm">
+      {isLoading && <Loader />} {/* Display loader if isLoading is true */}
       <div className="login-container">
         <div className="login-form">
           <div className="switch">
@@ -101,7 +97,6 @@ const Signin = () => {
               fontFamily="Poppins, sans-serif"
               selectionIndicatorMargin={6}
               disabled={false}
-            
             />
           </div>
           <p className="signin-txt">Sign In</p>
@@ -162,7 +157,6 @@ const Signin = () => {
 
             <Button text={"Login"} onClick={handleLogin} />
           </form>
-          {isLoading && <Loader />} {/* Display loader if isLoading is true */}
         </div>
         <div className="login-image">
           <img src="./src/assets/images/login_page_image.png" alt="Login Image" />
@@ -173,3 +167,4 @@ const Signin = () => {
 };
 
 export default Signin;
+
