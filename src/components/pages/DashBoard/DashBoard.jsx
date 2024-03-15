@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './DashBoard.css';
+import './../../../assets/css/style.css';
 // import './CreateStream/CreateStream.css'
 // import './src/components/pages/CreateStream/CreateStream.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

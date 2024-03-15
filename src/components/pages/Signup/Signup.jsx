@@ -1,6 +1,6 @@
-import "./Signup.css";
+// eslint-disable-next-line no-unused-vars
 import React from "react";
-import "./Signup.css"; // Import CSS file for styling
+import "./../../../assets/css/style.css"; // Import CSS file for styling
 import { useState } from "react";
 import SwitchSelector from "react-switch-selector";
 import { database, auth } from "../firebase";

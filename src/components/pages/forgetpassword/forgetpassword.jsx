@@ -1,6 +1,7 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import InputField from "../../resources/Input/input_field";
-import "./forgetpass.css";
+import "./../../../assets/css/style.css";
 
 
 const ForgetPassword = () => {

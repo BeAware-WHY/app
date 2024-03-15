@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import "./Signin.css";
+import "./../../../assets/css/style.css";
 import Button from "../../resources/Button/button";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -71,6 +72,7 @@ const Signin = () => {
   };
 
   const initialSelectedIndex = options.findIndex(
+    
     ({ value }) => value === "Sign in"
   );
 
@@ -94,15 +96,15 @@ const Signin = () => {
           </div>
           <p className="signin-txt">Sign In</p>
           <p className="no-account">If you don’t have an account register</p>
-          <div className="text">
-            You can{" "}
+         
+      
             <span
               className="register-here"
               onClick={() => (window.location.href = "/signup")}
             >
               Register here!
             </span>
-          </div>
+          
           <form onSubmit={handleLogin}>
             <label className="label">Email</label>
             <input
