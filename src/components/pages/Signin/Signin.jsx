@@ -6,49 +6,59 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import SwitchSelector from "react-switch-selector";
 import Loader from "../../resources/Loader/loader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const Signin = () => {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
-    // Basic validation for Email
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    // Basic validation for Email and Password
     if (!email || !email.includes("@")) {
-      alert("Please enter a valid email address");
+      setEmailError("Please enter a valid email address");
+      setIsLoading(false);
       return;
+    } else {
+      setEmailError("");
     }
-  
-    // Basic validation for Password
+
     if (password.length < 6) {
-      alert("Password must be at least 6 characters long");
+      setPasswordError("Password must be at least 6 characters long");
+      setIsLoading(false);
       return;
+    } else {
+      setPasswordError("");
     }
-  
-    setIsLoading(true); // Set loading state to true
-  
-    // Log in the user
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        // Login successful
-        alert("Login successful");
-        navigate("/createstream");
-      })
-      .catch((error) => {
-        // Handle login error
-        if (error.code === "auth/wrong-password") {
-          alert("Incorrect email or password");
-        } else {
-          //console.error
-          alert("Error logging in:", error);
-        }
-      })
-      .finally(() => {
-        setIsLoading(false); // Set loading state to false
-      });
+
+    try {
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      // Handle successful login
+      navigate("/Dashboard");
+    } catch (error) {
+      // Handle login error
+      if (error.code === "auth/wrong-password") {
+        alert("Incorrect email or password");
+      } else {
+        console.error("Error logging in:", error);
+        alert("Error logging in. Please try again later.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const options = [
@@ -66,16 +76,15 @@ const Signin = () => {
     },
   ];
 
-  const onChange = (newValue) => {
-    console.log(newValue);
+  const onChange = () => {
+    navigate('/Signup');
   };
 
-  const initialSelectedIndex = options.findIndex(
-    ({ value }) => value === "Sign in"
-  );
+  const initialSelectedIndex = options.findIndex(({ value }) => value === "Sign in");
 
   return (
     <div className="font-face-gm">
+      {isLoading && <Loader />} {/* Display loader if isLoading is true */}
       <div className="login-container">
         <div className="login-form">
           <div className="switch">
@@ -89,7 +98,6 @@ const Signin = () => {
               fontFamily="Poppins, sans-serif"
               selectionIndicatorMargin={6}
               disabled={false}
-              forcedSelectedIndex={0}
             />
           </div>
           <p className="signin-txt">Sign In</p>
@@ -114,17 +122,27 @@ const Signin = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-
+            {emailError && <p className="error-message">{emailError}</p>}
+            <div>
             <label className="label">Password</label>
-            <input
-              className="input-field-style"
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            </div>
+            <div style={{ position: 'relative', display: 'inline-block', marginBottom: '20px' }}>
+              <input
+                className="input-field-style"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <FontAwesomeIcon
+                icon={showPassword ? faEyeSlash : faEye}
+                className="eye-icon"
+                onClick={togglePasswordVisibility}
+              />
+            </div>
+            {passwordError && <p className="error-message">{passwordError}</p>}
 
             <div className="frgt-pass">
               <div className="chkbox">
@@ -138,6 +156,7 @@ const Signin = () => {
                 <label>Remember me</label>
               </div>
               <label
+                className="register-here"
                 style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={() => (window.location = "/forgetpassword")}
               >
@@ -147,7 +166,6 @@ const Signin = () => {
 
             <Button text={"Login"} onClick={handleLogin} />
           </form>
-          {isLoading && <Loader />} {/* Display loader if isLoading is true */}
         </div>
         <div className="login-image">
           <img src="./src/assets/images/login_page_image.png" alt="Login Image" />

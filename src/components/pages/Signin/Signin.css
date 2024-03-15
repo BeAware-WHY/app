@@ -110,7 +110,7 @@ body {
 }
 
 .input-field-style {
-    width: 100%;
+    width: 510px;
     padding: 4px;
     margin-bottom: 10px;
     border: 0;
@@ -144,5 +144,32 @@ body {
 
     .login-form {
         margin-bottom: 20px;
+    }
+}
+.eye-icon {
+    position: absolute;
+    top: 30%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 20px;
+    background-color: transparent;
+    color: black;
+    cursor: pointer;
+    z-index: 999;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .eye-icon {
+        top: 40%;
+        right: 10px;
+    }
+}
+
+/* Media query for even smaller screens */
+@media (max-width: 480px) {
+    .eye-icon {
+        top: 50%;
+        right: 5px;
     }
 }

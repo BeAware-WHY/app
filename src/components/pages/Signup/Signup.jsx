@@ -1,7 +1,5 @@
-import "./Signup.css";
-import React from "react";
+import React, { useState } from "react";
 import "./Signup.css"; // Import CSS file for styling
-import { useState } from "react";
 import SwitchSelector from "react-switch-selector";
 import { database, auth } from "../firebase";
 import { setDoc, doc } from "firebase/firestore";
@@ -9,17 +7,23 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import Button from "../../resources/Button/button";
 import Loader from "../../resources/Loader/loader";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import useAuthToken from "../../../constants/useAuthToken";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const Signup = () => {
   const navigate = useNavigate();
-
+  const { saveToken } = useAuthToken();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(""); // State for displaying error message
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked); // Toggle the checkbox state
@@ -27,27 +31,27 @@ const Signup = () => {
 
   const validateInputs = () => {
     if (firstName.trim() === "") {
-      alert("Please enter your First Name");
+      setError("Please enter your First Name");
       return false;
     }
 
     if (lastName.trim() === "") {
-      alert("Please enter your Last Name");
+      setError("Please enter your Last Name");
       return false;
     }
 
     if (!email || !email.includes("@")) {
-      alert("Please enter a valid email address");
+      setError("Please enter a valid email address");
       return false;
     }
 
     if (password.length < 5) {
-      alert("Password must be at least 6 characters long");
+      setError("Password must be at least 6 characters long");
       return false;
     }
 
     if (!isChecked) {
-      alert("Please agree to the Terms and Privacy Policy");
+      setError("Please agree to the Terms and Privacy Policy");
       return false;
     }
 
@@ -78,36 +82,30 @@ const Signup = () => {
         uid: userCredential.user.uid
       };
 
-      // Store user data in Firestore with user's UID as document ID
-      //await setDoc(doc(database, "users", userCredential.user.uid), formData);
+      await setDoc(doc(database, "users", userCredential.user.uid), formData);
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      const accessToken = res.user.stsTokenManager.accessToken;
+      saveToken(accessToken);
+      // Login successful
+      // User signed up and data stored successfully
+      console.log("User signed up and data stored successfully");
 
-      await setDoc(doc(database, "users", userCredential.user.uid), formData)
-        .then(() => {
-          // User signed up and data stored successfully
-          console.log("User signed up and data stored successfully");
-
-          // Log in the user
-          signInWithEmailAndPassword(auth, email, password)
-            .then(() => {
-              // Login successful
-              console.log("Login successful");
-
-              navigate("/createstream");
-            })
-            .catch((error) => {
-              console.error("Error logging in:", error);
-            });
-        })
-        .catch((error) => {
-          console.error("Error storing user data:", error);
-        });
+      navigate("/createstream");
+      window.location.reload(); 
     } catch (error) {
-      console.error("Error signing up:", error.message);
+      if (error.code === "auth/email-already-in-use") {
+        setError("Email is already in use. Please use a different email address.");
+      } else {
+        console.error("Error signing up:", error.message);
+        setError("Error signing up. Please try again later.");
+      }
     } finally {
       setIsLoading(false); // Set loading state to false after signup process completes
     }
   };
-
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const options = [
     {
       label: "Sign in",
@@ -118,27 +116,22 @@ const Signup = () => {
     {
       label: "Sign up",
       value: "Sign up",
-
       selectedBackgroundColor: "#1B4375",
       selectedFontColor: "#ffffff",
     },
   ];
 
-  const onChange = (newValue) => {
-    console.log(newValue);
+  const onChange = () => {
+    navigate("/CreateStream");
   };
 
   const initialSelectedIndex = options.findIndex(
     ({ value }) => value === "Sign up"
   );
 
-  // Render loader if isLoading is true
-  if (isLoading) {
-    return <div className="loader">{Loader}</div>;
-  }
-
   return (
     <div className="font-face-gm">
+      {isLoading && <Loader />}
       <div className="login-container">
         <div className="login-form">
           <div className="switch">
@@ -152,9 +145,9 @@ const Signup = () => {
               fontFamily="Poppins, sans-serif"
               selectionIndicatorMargin={6}
               disabled={false}
-              forcedSelectedIndex={1}
             />
           </div>
+          {error && <p className="error-message">{error}</p>}
           <p className="signin-txt">Sign Up</p>
           <p className="no-account">
             If you have already registered.
@@ -175,7 +168,7 @@ const Signup = () => {
               <div style={{ marginRight: "1rem" }}>
                 <label className="label">First Name</label>
                 <input
-                  className="input-field-style"
+                  className="input-firstname"
                   type="text"
                   name="firstName"
                   placeholder="Enter your First Name"
@@ -188,7 +181,7 @@ const Signup = () => {
                 <label className="label">Last Name</label>
 
                 <input
-                  className="input-field-style"
+                  className="input-lastname"
                   type="text"
                   name="lastName"
                   placeholder="Enter your Last Name"
@@ -210,18 +203,27 @@ const Signup = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             ></input>
+            
 
+            <div>
             <label className="label">Password</label>
-
-            <input
-              className="input-field-style"
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            ></input>
+            </div>
+            <div style={{ position: 'relative', display: 'inline-block', marginBottom: '20px' }}>
+              <input
+                className="input-field-style"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <FontAwesomeIcon
+                icon={showPassword ? faEyeSlash : faEye}
+                className="eye-icon"
+                onClick={togglePasswordVisibility}
+              />
+            </div>
             <div className="frgt-pass">
               <div className="chkbox">
                 <input
@@ -245,6 +247,7 @@ const Signup = () => {
           />
         </div>
       </div>
+     
     </div>
   );
 };

@@ -1,6 +1,6 @@
 // Button.js
 import React from 'react';
-import './Button.css'; // Import CSS for styling and animation
+import './button.css'; // Import CSS for styling and animation
 
 const Button = ({ text, onClick }) => {
   return (
