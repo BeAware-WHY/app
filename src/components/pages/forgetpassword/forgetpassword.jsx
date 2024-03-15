@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import InputField from "../../resources/Input/input_field";
+import InputField from "./../../resources/Input/Input_field";
 import "./forgetpass.css";
 
 

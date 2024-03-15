@@ -6,9 +6,11 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import SwitchSelector from "react-switch-selector";
 import Loader from "../../resources/Loader/loader";
+import useAuthToken from "../../../constants/useAuthToken";
 
 const Signin = () => {
   const navigate = useNavigate();
+  const { saveToken } = useAuthToken();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -17,47 +19,52 @@ const Signin = () => {
   const [passwordError, setPasswordError] = useState("");
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
+  
+    // Basic validation for Email
+    if (!email || !email.includes("@")) {
+      setEmailError("Please enter a valid email address");
+      return;
+    } else {
+      setEmailError("");
+    }
+  
+    // Basic validation for Password
+    if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long");
+      return;
+    } else {
+      setPasswordError("");
+    }
+  
+    setIsLoading(true); // Set loading state to true
   
     try {
-      // Validate email
-      if (!email || !email.includes("@")) {
-        setEmailError("Please enter a valid email address");
-        return;
-      } else {
-        setEmailError("");
-      }
-  
-      // Validate password
-      if (password.length < 6) {
-        setPasswordError("Password must be at least 6 characters long");
-        return;
-      } else {
-        setPasswordError("");
-      }
-  
-      setIsLoading(true);
-  
-      // Attempt sign-in
-      await signInWithEmailAndPassword(auth, email, password);
-  
-      // Navigate on successful sign-in
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      const accessToken = res.user.stsTokenManager.accessToken;
+      saveToken(accessToken);
+      // Login successful
+      alert("Login successful");
+      
+      
+      // Store the token in localStorage
+      
       navigate("/createstream");
+      window.location.reload();
+      // Handle other logic based on the response
     } catch (error) {
-      // Handle sign-in errors
-      if (error.code === "auth/wrong-password" || error.code === "auth/user-not-found") {
-        setPasswordError("Incorrect email or password");
-      } else if (error.code === "auth/invalid-credential") {
-        alert("Invalid credentials. Please check your email and password.");
+      // Handle login error
+      if (error.code === "auth/wrong-password") {
+        alert("Incorrect email or password");
       } else {
-        console.error("Error logging in:", error.message);
-        alert("An unexpected error occurred. Please try again later.");
+        console.log("58------", error);
+        alert("Error logging in:", error.message);
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Set loading state to false
     }
   };
-  
+   
   const options = [
     {
       label: "Sign in",

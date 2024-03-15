@@ -19,7 +19,26 @@ const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const database = getFirestore(app);
+const getUserIDFromAuthToken = async () => {
+  const currentUser = auth.currentUser;
 
-export { auth, database };
+  if (currentUser) {
+    try {
+      // Get the ID token
+
+      // Decode the ID token to get user information
+      const decodedToken = currentUser;
+      const userId = decodedToken.uid;
+      return userId;
+    } catch (error) {
+      console.error('Error retrieving user ID:', error);
+      return null;
+    }
+  } else {
+    console.error('No user signed in.');
+    return null;
+  }
+};
+export { auth, database, getUserIDFromAuthToken };
 
 // export const database = getAuth(app);
