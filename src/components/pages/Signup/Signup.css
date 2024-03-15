@@ -169,6 +169,14 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.error-container {
+  margin-top: 10px;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+}
 
 
 
@@ -188,3 +196,4 @@ body {
       margin-bottom: 20px;
   }
 }
+

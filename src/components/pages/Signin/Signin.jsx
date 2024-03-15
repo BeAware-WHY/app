@@ -44,7 +44,7 @@ const Signin = () => {
       const accessToken = res.user.stsTokenManager.accessToken;
       saveToken(accessToken);
       // Login successful
-      navigate("/CreateStream");
+      navigate("/Dashboard");
       window.location.reload();
       // Handle other logic based on the response
     } catch (error) {

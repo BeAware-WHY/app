@@ -1,7 +1,5 @@
-import "./Signup.css";
-import React from "react";
+import React, { useState } from "react";
 import "./Signup.css"; // Import CSS file for styling
-import { useState } from "react";
 import SwitchSelector from "react-switch-selector";
 import { database, auth } from "../firebase";
 import { setDoc, doc } from "firebase/firestore";
@@ -14,6 +12,7 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(""); // State for displaying error message
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -27,27 +26,27 @@ const Signup = () => {
 
   const validateInputs = () => {
     if (firstName.trim() === "") {
-      alert("Please enter your First Name");
+      setError("Please enter your First Name");
       return false;
     }
 
     if (lastName.trim() === "") {
-      alert("Please enter your Last Name");
+      setError("Please enter your Last Name");
       return false;
     }
 
     if (!email || !email.includes("@")) {
-      alert("Please enter a valid email address");
+      setError("Please enter a valid email address");
       return false;
     }
 
     if (password.length < 5) {
-      alert("Password must be at least 6 characters long");
+      setError("Password must be at least 6 characters long");
       return false;
     }
 
     if (!isChecked) {
-      alert("Please agree to the Terms and Privacy Policy");
+      setError("Please agree to the Terms and Privacy Policy");
       return false;
     }
 
@@ -78,31 +77,19 @@ const Signup = () => {
         uid: userCredential.user.uid
       };
 
-      // Store user data in Firestore with user's UID as document ID
-      //await setDoc(doc(database, "users", userCredential.user.uid), formData);
+      await setDoc(doc(database, "users", userCredential.user.uid), formData);
 
-      await setDoc(doc(database, "users", userCredential.user.uid), formData)
-        .then(() => {
-          // User signed up and data stored successfully
-          console.log("User signed up and data stored successfully");
+      // User signed up and data stored successfully
+      console.log("User signed up and data stored successfully");
 
-          // Log in the user
-          signInWithEmailAndPassword(auth, email, password)
-            .then(() => {
-              // Login successful
-              console.log("Login successful");
-
-              navigate("/createstream");
-            })
-            .catch((error) => {
-              console.error("Error logging in:", error);
-            });
-        })
-        .catch((error) => {
-          console.error("Error storing user data:", error);
-        });
+      navigate("/createstream");
     } catch (error) {
-      console.error("Error signing up:", error.message);
+      if (error.code === "auth/email-already-in-use") {
+        setError("Email is already in use. Please use a different email address.");
+      } else {
+        console.error("Error signing up:", error.message);
+        setError("Error signing up. Please try again later.");
+      }
     } finally {
       setIsLoading(false); // Set loading state to false after signup process completes
     }
@@ -118,27 +105,22 @@ const Signup = () => {
     {
       label: "Sign up",
       value: "Sign up",
-
       selectedBackgroundColor: "#1B4375",
       selectedFontColor: "#ffffff",
     },
   ];
 
   const onChange = () => {
-    navigate('/Signin');
+    navigate("/Signin");
   };
 
   const initialSelectedIndex = options.findIndex(
     ({ value }) => value === "Sign up"
   );
 
-  // Render loader if isLoading is true
-  if (isLoading) {
-    return <div className="loader">{Loader}</div>;
-  }
-
   return (
     <div className="font-face-gm">
+      {isLoading && <Loader />}
       <div className="login-container">
         <div className="login-form">
           <div className="switch">
@@ -154,6 +136,7 @@ const Signup = () => {
               disabled={false}
             />
           </div>
+          {error && <p className="error-message">{error}</p>}
           <p className="signin-txt">Sign Up</p>
           <p className="no-account">
             If you have already registered.
@@ -209,6 +192,7 @@ const Signup = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             ></input>
+            
 
             <label className="label">Password</label>
 
@@ -220,6 +204,7 @@ const Signup = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="current-password"
             ></input>
             <div className="frgt-pass">
               <div className="chkbox">
@@ -244,6 +229,7 @@ const Signup = () => {
           />
         </div>
       </div>
+     
     </div>
   );
 };
