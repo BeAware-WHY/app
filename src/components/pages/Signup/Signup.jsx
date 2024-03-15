@@ -7,10 +7,12 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import Button from "../../resources/Button/button";
 import Loader from "../../resources/Loader/loader";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import useAuthToken from "../../../constants/useAuthToken";
 
 const Signup = () => {
   const navigate = useNavigate();
-
+  const { saveToken } = useAuthToken();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(""); // State for displaying error message
 
@@ -78,11 +80,15 @@ const Signup = () => {
       };
 
       await setDoc(doc(database, "users", userCredential.user.uid), formData);
-
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      const accessToken = res.user.stsTokenManager.accessToken;
+      saveToken(accessToken);
+      // Login successful
       // User signed up and data stored successfully
       console.log("User signed up and data stored successfully");
 
       navigate("/createstream");
+      window.location.reload(); 
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         setError("Email is already in use. Please use a different email address.");
@@ -111,7 +117,7 @@ const Signup = () => {
   ];
 
   const onChange = () => {
-    navigate("/Signin");
+    navigate("/CreateStream");
   };
 
   const initialSelectedIndex = options.findIndex(
