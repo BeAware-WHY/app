@@ -9,6 +9,8 @@ import Button from "../../resources/Button/button";
 import Loader from "../../resources/Loader/loader";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import useAuthToken from "../../../constants/useAuthToken";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -21,6 +23,7 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked); // Toggle the checkbox state
@@ -100,7 +103,9 @@ const Signup = () => {
       setIsLoading(false); // Set loading state to false after signup process completes
     }
   };
-
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const options = [
     {
       label: "Sign in",
@@ -163,7 +168,7 @@ const Signup = () => {
               <div style={{ marginRight: "1rem" }}>
                 <label className="label">First Name</label>
                 <input
-                  className="input-field-style"
+                  className="input-firstname"
                   type="text"
                   name="firstName"
                   placeholder="Enter your First Name"
@@ -176,7 +181,7 @@ const Signup = () => {
                 <label className="label">Last Name</label>
 
                 <input
-                  className="input-field-style"
+                  className="input-lastname"
                   type="text"
                   name="lastName"
                   placeholder="Enter your Last Name"
@@ -200,18 +205,25 @@ const Signup = () => {
             ></input>
             
 
+            <div>
             <label className="label">Password</label>
-
-            <input
-              className="input-field-style"
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-            ></input>
+            </div>
+            <div style={{ position: 'relative', display: 'inline-block', marginBottom: '20px' }}>
+              <input
+                className="input-field-style"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <FontAwesomeIcon
+                icon={showPassword ? faEyeSlash : faEye}
+                className="eye-icon"
+                onClick={togglePasswordVisibility}
+              />
+            </div>
             <div className="frgt-pass">
               <div className="chkbox">
                 <input

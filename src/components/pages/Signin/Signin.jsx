@@ -123,9 +123,10 @@ const Signin = () => {
               required
             />
             {emailError && <p className="error-message">{emailError}</p>}
-
+            <div>
             <label className="label">Password</label>
-            <div className="password-input">
+            </div>
+            <div style={{ position: 'relative', display: 'inline-block', marginBottom: '20px' }}>
               <input
                 className="input-field-style"
                 type={showPassword ? "text" : "password"}
