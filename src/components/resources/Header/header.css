@@ -1,0 +1,36 @@
+/* Header Component Styles */
+/* App.css or index.css */
+@import-normalize;
+
+html, body, #root {
+    overflow: hidden;
+    border-collapse: collapse;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: "PoppinsRegular";
+  }
+
+  .app-container {
+    margin: 0;
+    padding: 0;
+    font-family: "PoppinsRegular";
+    /* Add any other styles for your app container */
+}
+
+
+/* Header Component Styles */
+.header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+  }
+  
+  .logoimg {
+    position: absolute;
+    top: 10px; /* Adjust the top position as needed */
+    right: 20px; /* Adjust the right position as needed */
+    width: 100px;
+    height: auto;
+  }

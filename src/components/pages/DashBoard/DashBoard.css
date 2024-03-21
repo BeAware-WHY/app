@@ -1,0 +1,220 @@
+.image-corner-left-currentstream {
+    position: absolute;
+    bottom: 0;
+    left: 195px;
+  }
+  
+  .image-corner-left-currentstream img {
+    width: 300px; /* Make the image responsive */
+    max-width: 400px; /* Ensure the image does not exceed its container */
+    height: auto; /* Maintain aspect ratio */
+    opacity: 0.8;
+  }
+
+  .stream-card-container-currentstream {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+  }
+  
+  .stream-card-currentstream {
+    width: 745px;
+    height: 360px;
+    /* padding: 20px; */
+    background-color: rgba(255, 255, 255, 0.45);
+    border-radius: 10px;
+    display: flex;
+  }
+
+  .new-stream-button {
+    position: relative;
+
+    background-color: #E5E5E5;
+    color: black;
+    /* left: 450px; */
+    /* border: none; */
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-left: 1000px; /* Add margin to separate from navbar-profile */
+    cursor: pointer;
+    display: block;
+    z-index: 999;
+}
+
+.new-stream-button:hover {
+    background-color: #a8a7a7;
+}
+
+.activeButton {
+  background-color: #1B4375;
+  border-radius: 35px;
+  height: 50px;
+  width: 200px;
+  border: none;
+  transition: 0.5s ease;
+  cursor: pointer;
+  color: #E5E5E5;
+  font-size: 14px;
+}
+
+.inactiveButton {
+  background-color: #E5E5E5;
+  border-radius: 35px;
+  height: 50px;
+  width: 200px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+.toggle-button-bg{
+    position: relative;
+    border-radius: 35px;
+    height: 50px;
+    background-color: #E5E5E5;
+    width: 250px;
+    display: flex;
+    justify-content: center;
+    padding: 7px;
+    /* font-size: 20px; */
+}
+
+.stream-buttons{
+    display: flex;
+    justify-content: center;
+}
+
+.logo-placeholder-currentstream {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #CADBEC; /* Placeholder background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    /* border-style: dashed; */
+    /* overflow: hidden; */
+  }
+  
+  .logo-placeholder-currentstream img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 50%;
+    font-size: 12px;
+  }
+
+  .logo-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 150px;
+    padding-left: 40px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+ }
+ .edit-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 181px;
+ }
+ .column-main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 472px;
+ }
+
+ .download-buttons-pdf {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 90px;
+    padding: 0 10px;
+  }
+
+  .download-buttons-pdf button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+
+  .download-buttons-qr {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 279px;
+    padding-right: 47px;
+  }
+
+  .download-buttons-qr button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+
+  .semi-circle {
+    width: 200px;
+    height: 70px; /* Double the desired height of the semi-circle */
+    background-color: #007bff;
+    border-radius: 0 0 150px 150px; /* Use half of the height for the bottom-left and bottom-right corners */
+    margin-bottom: 10px;
+    overflow: hidden; /* Ensure the semi-circle shape is maintained */
+}
+.streamname-from-database {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.stream-link-from-database {
+    width: 300px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.stream-desc-from-database {
+    width: 300px;
+    height: 130px;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #CADBEC;
+    box-sizing: border-box;
+    background-color: #CADBEC;
+    border-radius: 5px;
+}
+
+.edit-icon-createstream{
+    position: absolute;
+    color: #000; /* Adjust icon color as needed */
+    /* font-size: 20px; Adjust icon size as needed */
+    height: 20px;
+    width: 20px;
+    padding: 5px;
+    background-color: #CADBEC;
+    border-radius: 50%;
+    border-style:dashed;
+    border-width: 1px;
+    cursor: pointer;
+    margin-top: -10px;
+    margin-left: 170px;
+}
+  .copy-button {
+    position: absolute;
+    top: 50%;
+    right: 40px;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: none;
+    color: black;
+    cursor: pointer;
+    z-index: 999;
+}
+
+/* .currentstream-main{
+    
+} */
