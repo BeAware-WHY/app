@@ -39,6 +39,6 @@ const getUserIDFromAuthToken = async () => {
     return null;
   }
 };
-export { auth, database, getUserIDFromAuthToken };
+export { app, auth, database, getUserIDFromAuthToken };
 
 // export const database = getAuth(app);
