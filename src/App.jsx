@@ -20,14 +20,12 @@ function App() {
           <Route path='/signup' element={<SignUp />} />
           <Route path='/forgetpassword' element={<ForgetPassword />} />
           <Route path='/forgetpasswordreview' element={<ForgetPasswordReview />} />
-          {/* Redirect to SignIn for other routes if token is expired */}
           <Route path='*' element={<Navigate to='/signin' />} />
         </Routes>
       ) : (
         <Routes>
           <Route path='/createstream' element={<CreateStream />} />
           <Route path='/dashboard' element={<DashBoard />} />
-          {/* Redirect to Dashboard for other routes if authenticated */}
           <Route path='*' element={<Navigate to='/dashboard' />} />
         </Routes>
       )}

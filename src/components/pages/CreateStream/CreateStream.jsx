@@ -5,6 +5,8 @@ import { faUserAlt, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { collection, addDoc } from 'firebase/firestore';
 import { database } from '../firebase';
 import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
+import useAuthToken from "../../../constants/useAuthToken";
 // import QRCode from 'qrcode.react';
 
 
@@ -16,6 +18,7 @@ function CreateStream() {
     const [logoImage, setLogoImage] = useState(null); // State to store the uploaded logo image
     const [streamDate] = useState(new Date()); 
     const navigate = useNavigate();
+    const { removeToken } = useAuthToken();
 
     const handleCancel = () => {
         // Navigate to the dashboard screen
@@ -23,6 +26,16 @@ function CreateStream() {
     };
     const handleCreate = () => {
         navigate('/dashboard');
+    };
+    const handleLogout = async () => {
+        try {
+            await auth.signOut(); // Sign out the user
+            removeToken(); // Remove the authentication token
+            navigate('/signin'); // Redirect to the signin page
+        } catch (error) {
+            console.error('Error occurred during logout:', error);
+            // Handle error
+        }
     };
     const toggleProfile = () => {
         setProfileClicked(!profileClicked);
@@ -110,7 +123,7 @@ function CreateStream() {
                         <div className="profile-popup">
                             <ul>
                                 <li>Profile</li>
-                                <li>Logout</li>
+                                <li onClick={handleLogout}>Logout</li>
                             </ul>
                         </div>
                     )}

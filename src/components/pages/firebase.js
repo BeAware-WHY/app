@@ -41,4 +41,3 @@ const getUserIDFromAuthToken = async () => {
 };
 export { auth, database, getUserIDFromAuthToken };
 
-// export const database = getAuth(app);

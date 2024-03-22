@@ -1,4 +1,3 @@
-// ./utils/authUtils.js
 
 // Function to check if the authentication token is expired
 export const isTokenExpired = () => {
