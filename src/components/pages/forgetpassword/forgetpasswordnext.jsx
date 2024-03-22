@@ -11,6 +11,11 @@ const forgetpasswordreview = () => {
 
   return (
     <div className="font-face-gm">
+       <nav className="navbar-signin">
+        <div className="navbar-logo-signin">
+          <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
+        </div>
+      </nav>
       <div className="login-container">
         <div className="login-form">
           <p className="signin-txt">Recovery Email Sent !</p>
@@ -26,7 +31,7 @@ const forgetpasswordreview = () => {
               onChange={(e) => setPassword(e.target.value)}
             /> */}
 
-            <Button text="CONTACT SUPPORT" onClick={handleNext} />
+            <Button text="RESEND EMAIL" onClick={handleNext} />
             <h1></h1>
             
             <Button text="BACK TO LOGIN"  onClick={() => window.location.href='/signup'} />

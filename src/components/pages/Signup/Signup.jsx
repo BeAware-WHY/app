@@ -9,6 +9,14 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import Button from "../../resources/Button/button";
 import Loader from "../../resources/Loader/loader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEnvelope,
+  faLock,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-solid-svg-icons";
+
 
 const Signup = () => {
   const navigate = useNavigate();
