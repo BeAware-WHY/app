@@ -80,88 +80,91 @@ const Signin = () => {
   const initialSelectedIndex = options.findIndex(({ value }) => value === "Sign in");
 
   return (
+   
     <div className="font-face-gm">
-      <div className="login-container">
-        <div className="login-form">
-          <div className="switch">
-            <SwitchSelector
-              onChange={onChange}
-              options={options}
-              initialSelectedIndex={initialSelectedIndex}
-              backgroundColor={"#E5E5E5"}
-              fontColor={"#000000"}
-              selectedBackgroundColor={"#1B4375"}
-              fontFamily="Poppins, sans-serif"
-              selectionIndicatorMargin={6}
-              disabled={false}
-            
-            />
-          </div>
-          <p className="signin-txt">Sign In</p>
-          <p className="no-account">If you don’t have an account register</p>
-          <div className="text">
-            You can{" "}
-            <span
-              className="register-here"
-              onClick={() => (window.location.href = "/signup")}
-            >
-              Register here!
-            </span>
-          </div>
-          <form onSubmit={handleLogin}>
-            <label className="label">Email</label>
-            <input
-              className="input-field-style"
-              type="email"
-              name="email"
-              placeholder="Enter your email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            {emailError && <p className="error-message">{emailError}</p>}
-
-            <label className="label">Password</label>
-            <input
-              className="input-field-style"
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            {passwordError && <p className="error-message">{passwordError}</p>}
-
-            <div className="frgt-pass">
-              <div className="chkbox">
-                <input
-                  className="chkbox"
-                  type="checkbox"
-                  checked={isChecked}
-                  name="lsRememberMe"
-                  onChange={(e) => setIsChecked(e.target.checked)}
-                />
-                <label>Remember me</label>
-              </div>
-              <label
-                className="register-here"
-                style={{ fontFamily: "Poppins, sans-serif" }}
-                onClick={() => (window.location = "/forgetpassword")}
-              >
-                Forget Password
-              </label>
+      <nav className="navbar-signin">
+          <div className="navbar-logo-signin">
+                    <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
+                </div>
+          </nav>
+        <div className="login-container">
+       
+          <div className="login-form">
+            <div className="signin-switch">
+              <SwitchSelector
+                onChange={onChange}
+                options={options}
+                initialSelectedIndex={initialSelectedIndex}
+                backgroundColor={"#E5E5E5"}
+                fontColor={"#000000"}
+                selectedBackgroundColor={"#1B4375"}
+                fontFamily="Poppins, sans-serif"
+                fontSize={12}
+                selectionIndicatorMargin={6}
+                disabled={false} />
             </div>
+            <p className="signin-txt">Sign In</p>
+            <p className="no-account">If you don’t have an account</p>
+            <div className="text">
+              You can{" "}
+              <span
+                className="register-here"
+                onClick={() => (window.location.href = "/signup")}
+              >
+                Register here!
+              </span>
+            </div>
+            <form onSubmit={handleLogin}>
+              <label className="label">Email</label>
+              <input
+                className="input-field-style"
+                type="email"
+                name="email"
+                placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required />
+              {emailError && <p className="error-message">{emailError}</p>}
 
-            <Button text={"Login"} onClick={handleLogin} />
-          </form>
-          {isLoading && <Loader />} {/* Display loader if isLoading is true */}
-        </div>
-        <div className="login-image">
-          <img src="./src/assets/images/login_page_image.png" alt="Login Image" />
+              <label className="label">Password</label>
+              <input
+                className="input-field-style"
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required />
+              {passwordError && <p className="error-message">{passwordError}</p>}
+
+              <div className="frgt-pass">
+                <div className="chkbox">
+                  <input
+                    className="chkbox"
+                    type="checkbox"
+                    checked={isChecked}
+                    name="lsRememberMe"
+                    onChange={(e) => setIsChecked(e.target.checked)} />
+                  <label>Remember me</label>
+                </div>
+                <label
+                  className="register-here"
+                  style={{ fontFamily: "Poppins, sans-serif" }}
+                  onClick={() => (window.location = "/forgetpassword")}
+                >
+                  Forget Password
+                </label>
+              </div>
+
+              <Button text={"Login"} onClick={handleLogin} />
+            </form>
+            {isLoading && <Loader />} {/* Display loader if isLoading is true */}
+          </div>
+          <div className="login-image">
+            <img src="./src/assets/images/login_page_image.png" alt="Login Image" />
+          </div>
         </div>
       </div>
-    </div>
   );
 };
 

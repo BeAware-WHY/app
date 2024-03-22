@@ -1,7 +1,174 @@
 body {
     overflow: hidden;
     font-family: 'Poppins', sans-serif;
+    margin: 10;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+    /*background-image:url('./assets/images/background.png') repeat;
+    */
+    background: radial-gradient(at top right,#678ebd 15%,  #123969 60%);
 }
+
+:root {
+    font-family: "Poppins", sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+  
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+  
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+ 
+   
+  /* CSS code for setting background image */
+  .background-image {
+    /* Set background image */
+    background-image: url('./assets/images/background.png');
+    /* Set background size to cover the entire element */
+    background-size: cover;
+    /* Set background position to center */
+    background-position: center;
+    /* Set background repeat to no-repeat */
+    background-repeat: no-repeat;
+    /* Optionally, set additional properties */
+    /* For example, set width and height to fill the screen */
+    width: 100vw;
+    height: 100vh;
+  } 
+  
+  
+  
+  
+  
+  h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+  }
+  
+  
+  button:focus,
+  button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+  
+  
+  .poppins-thin {
+    font-family: "Poppins", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+  }
+  
+  .poppins-extralight {
+    font-family: "Poppins", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+  }
+  
+  .poppins-light {
+    font-family: "Poppins", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+  .poppins-regular {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .poppins-medium {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  .poppins-semibold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+  }
+  
+  .poppins-bold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  .poppins-extrabold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+  }
+  
+  .poppins-black {
+    font-family: "Poppins", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+  }
+  
+  .poppins-thin-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 100;
+    font-style: italic;
+  }
+  
+  .poppins-extralight-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 200;
+    font-style: italic;
+  }
+  
+  .poppins-light-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 300;
+    font-style: italic;
+  }
+  
+  .poppins-regular-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+  
+  .poppins-medium-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: italic;
+  }
+  
+  .poppins-semibold-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: italic;
+  }
+  
+  .poppins-bold-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+  }
+  
+  .poppins-extrabold-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 800;
+    font-style: italic;
+  }
+  
+  .poppins-black-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 900;
+    font-style: italic;
+  }
+  
+
+
 
 .text{
     font-family: 'Poppins', sans-serif;
@@ -47,6 +214,21 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+.navbar-signin {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    position: relative;
+    background-color: transparent; /* Make navbar transparent */
+    padding-right: 20px;
+    order: 2;
+  }
+  
+  .navbar-logo-signin img {
+    height: 30px;
+    margin-left: auto;
+  }
+
 .no-account{
     
     font-family: 'Poppins', sans-serif;
@@ -90,9 +272,11 @@ body {
     
 }
 
-.switch{
+.signin-switch{
     font-family: 'Poppins', sans-serif;
-    height: 36px;
+    font-style: oblique;
+    height: 40px;
+    border-radius: 20;
     
     margin-left: 40px;
   margin-right: 40px;
@@ -146,3 +330,17 @@ body {
         margin-bottom: 20px;
     }
 }
+
+@media (prefers-color-scheme: light) {
+    :root {
+      color: #213547;
+      background-color: #ffffff;
+    }
+    a:hover {
+      color: #747bff;
+    }
+    button {
+      background-color: #f9f9f9;
+    }
+  }
+  
