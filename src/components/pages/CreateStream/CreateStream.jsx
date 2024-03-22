@@ -25,7 +25,17 @@ function CreateStream() {
         // Navigate to the dashboard screen
         navigate('/dashboard');
     };
-     toggleProfile = () => {
+    const handleLogout = async () => {
+        try {
+            await auth.signOut(); // Sign out the user
+            removeToken(); // Remove the authentication token
+            navigate('/signin'); // Redirect to the signin page
+        } catch (error) {
+            console.error('Error occurred during logout:', error);
+            // Handle error
+        }
+    };
+    const toggleProfile = () => {
         setProfileClicked(!profileClicked);
     };
 
