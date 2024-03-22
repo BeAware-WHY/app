@@ -83,23 +83,7 @@ function CurrentStream() {
 }
 
 
-function PastStream() {
-    return (
-        <>
-            <div className="past-stream-container">
-                <div className="past-streams-card">
-                    {/* <div className="past-streams-rounded-square"></div> */}
-                    <div className="past-streams-rectangle"></div>
-                    <div className="past-streams-logo">
-                        <img src="logo.png" alt="Company Logo" />
-                    </div>
-                    <div className="past-streams-company-name">Company Name</div>
-                </div>
-            </div>
-        </>
-    );
-}
-
+// the code had error @karan - please submit the new code or i will update in next commit
 
 
 
