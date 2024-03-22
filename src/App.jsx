@@ -8,6 +8,7 @@ import ForgetPasswordReview from './components/pages/forgetpassword/forgetpasswo
 import CreateStream from './components/pages/Createstream/CreateStream';
 import DashBoard from './components/pages/DashBoard/DashBoard';
 import { isTokenExpired } from './utils/authUtils';
+import Profile from './components/pages/Profile';
 
 function App() {
   const tokenExpired = isTokenExpired();
@@ -29,6 +30,7 @@ function App() {
           <Route path='/dashboard' element={<DashBoard />} />
           {/* Redirect to Dashboard for other routes if authenticated */}
           <Route path='*' element={<Navigate to='/dashboard' />} />
+          <Route path="/profile" element={<Profile/>}/>
         </Routes>
       )}
     </BrowserRouter>
