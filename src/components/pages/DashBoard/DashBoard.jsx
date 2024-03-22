@@ -9,6 +9,8 @@ import { faUserAlt, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 // import { database } from '../firebase';
 import { useNavigate } from "react-router-dom";
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { auth } from "../firebase";
+import useAuthToken from "../../../constants/useAuthToken";
 
 function CurrentStreamHeading() {
     return (
@@ -84,16 +86,19 @@ function CurrentStream() {
 
 
 function PastStream() {
-    return (<div className="currentstream-main">
-        <div className="image-corner-left-currentstream">
-            <img src="./src/assets/images/dashboard.png" alt="personstreamcreate" />
-        </div>
-        <div className="stream-card-container-currentstream">
-            <div className="stream-card-currentstream">
-
+    return (
+        <>
+            <div className="past-stream-container">
+                <div className="past-streams-card">
+                    {/* <div className="past-streams-rounded-square"></div> */}
+                    <div className="past-streams-rectangle"></div>
+                    <div className="past-streams-logo">
+                        <img src="logo.png" alt="Company Logo" />
+                    </div>
+                    <div className="past-streams-company-name">Company Name</div>
+                </div>
             </div>
-        </div>
-    </div>
+        </>
     );
 }
 
@@ -103,9 +108,19 @@ function PastStream() {
 function DashBoard() {
     const [profileClicked, setProfileClicked] = useState(false);
     const navigate = useNavigate();
-
+    const { removeToken } = useAuthToken();
     const newStream = () => {
         navigate('/createstream');
+    };
+    const handleLogout = async () => {
+        try {
+            // await auth.signOut(); // Sign out the user
+            removeToken(); // Remove the authentication token
+            navigate('/signin'); // Redirect to the signin page
+        } catch (error) {
+            console.error('Error occurred during logout:', error);
+            // Handle error
+        }
     };
     const toggleProfile = () => {
         setProfileClicked(!profileClicked);
@@ -136,7 +151,7 @@ function DashBoard() {
                         <div className="profile-popup">
                             <ul>
                                 <li>Profile</li>
-                                <li>Logout</li>
+                                <li onClick={handleLogout}>Logout</li>
                             </ul>
                         </div>
                     )}
