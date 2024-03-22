@@ -35,10 +35,6 @@ function CreateStream() {
             // Handle error
         }
     };
-    const toggleProfile = () => {
-        setProfileClicked(!profileClicked);
-    };
-
     const handleLogoChange = (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
@@ -51,6 +47,11 @@ function CreateStream() {
             reader.readAsDataURL(file);
         }
     };
+    
+    const toggleProfile = () => {
+        setProfileClicked(!profileClicked);
+    };
+
     
     const storage = getStorage(app);
     //to handle create button click 
