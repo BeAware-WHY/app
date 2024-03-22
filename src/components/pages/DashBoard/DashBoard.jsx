@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import './DashBoard.css';
-// import './CreateStream/CreateStream.css'
-// import './src/components/pages/CreateStream/CreateStream.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { Link } from 'react-router-dom';
 import { faUserAlt, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from "react-router-dom";
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
@@ -88,7 +85,6 @@ function PastStream() {
         <>
             <div className="past-stream-container">
                 <div className="past-streams-card">
-                    {/* <div className="past-streams-rounded-square"></div> */}
                     <div className="past-streams-rectangle"></div>
                     <div className="past-streams-logo">
                         <img src="logo.png" alt="Company Logo" />
@@ -100,9 +96,6 @@ function PastStream() {
     );
 }
 
-
-
-
 function DashBoard() {
     const [profileClicked, setProfileClicked] = useState(false);
     const navigate = useNavigate();
@@ -112,7 +105,6 @@ function DashBoard() {
     };
     const handleLogout = async () => {
         try {
-            // await auth.signOut(); // Sign out the user
             removeToken(); // Remove the authentication token
             navigate('/signin'); // Redirect to the signin page
         } catch (error) {
@@ -140,7 +132,6 @@ function DashBoard() {
                     <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
                 </div>
                 <button className="new-stream-button" onClick={newStream}>New Stream</button>
-                {/* <Link to="/createstream" className="new-stream-button">New Stream</Link> */}
                 <div className="navbar-profile" onClick={toggleProfile}>
                     <div className={`profile-icon ${profileClicked ? 'active' : ''}`}>
                         <FontAwesomeIcon icon={faUserAlt} />
