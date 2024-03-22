@@ -5,8 +5,6 @@ import './DashBoard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { Link } from 'react-router-dom';
 import { faUserAlt, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
-// import { collection, addDoc } from 'firebase/firestore';
-// import { database } from '../firebase';
 import { useNavigate } from "react-router-dom";
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { auth } from "../firebase";
