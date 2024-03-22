@@ -53,7 +53,7 @@ function CreateStream() {
     };
     
     const storage = getStorage(app);
-
+    //to handle create button click 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
