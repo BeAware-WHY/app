@@ -21,6 +21,10 @@ function CreateStream() {
     const navigate = useNavigate();
     const { removeToken } = useAuthToken();
 
+    const handleCancel = () => {
+        // Navigate to the dashboard screen
+        navigate('/dashboard');
+    };
     const handleLogout = async () => {
         try {
             await auth.signOut(); // Sign out the user
