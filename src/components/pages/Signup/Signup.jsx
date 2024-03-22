@@ -139,6 +139,11 @@ const Signup = () => {
 
   return (
     <div className="font-face-gm">
+       <nav className="navbar-signin">
+        <div className="navbar-logo-signin">
+          <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
+        </div>
+      </nav>
       <div className="login-container">
         <div className="login-form">
           <div className="switch">
