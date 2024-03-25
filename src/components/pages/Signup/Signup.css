@@ -130,16 +130,25 @@ body {
   vertical-align: middle;
    
 }
+<<<<<<< HEAD
 
 
 .input-field-style {
   width: 100%;
+=======
+.input-lastname {
+  width: 100%;
+  max-width: 240px;
+>>>>>>> 9a60d3effa723b9c09f102f102b1a60bdd70d378
   padding: 4px;
   margin-bottom: 10px;
   border: 0;
   outline: 0;
   color: #000842;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9a60d3effa723b9c09f102f102b1a60bdd70d378
   border-bottom: 1px solid #000842;
   font-family: 'Poppins', sans-serif;
   font-style: italic;
@@ -148,7 +157,48 @@ body {
   margin-bottom: 20px;
   color: #000842;
   background-color: #D9D9D9;
+<<<<<<< HEAD
   }
+=======
+}
+
+.input-firstname {
+  width: 100%;
+  max-width: 240px;
+  padding: 4px;
+  margin-bottom: 10px;
+  border: 0;
+  outline: 0;
+  color: #000842;
+  border-bottom: 1px solid #000842;
+  font-family: 'Poppins', sans-serif;
+  font-style: italic;
+  font-size: small;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  color: #000842;
+  background-color: #D9D9D9;
+}
+
+.input-field-style {
+  width: 100%;
+  max-width: 510px;
+  padding: 4px;
+  margin-bottom: 10px;
+  border: 0;
+  outline: 0;
+  color: #000842;
+  border-bottom: 1px solid #000842;
+  font-family: 'Poppins', sans-serif;
+  font-style: italic;
+  font-size: small;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  color: #000842;
+  background-color: #D9D9D9;
+}
+
+>>>>>>> 9a60d3effa723b9c09f102f102b1a60bdd70d378
 
 .rounded-button {
   border: none;
@@ -169,6 +219,17 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+<<<<<<< HEAD
+=======
+.error-container {
+  margin-top: 10px;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+}
+>>>>>>> 9a60d3effa723b9c09f102f102b1a60bdd70d378
 
 
 
@@ -187,4 +248,9 @@ body {
   .login-form {
       margin-bottom: 20px;
   }
+<<<<<<< HEAD
 }
+=======
+}
+
+>>>>>>> 9a60d3effa723b9c09f102f102b1a60bdd70d378

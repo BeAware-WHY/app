@@ -9,7 +9,11 @@
 }
 
 .input-field-style {
+<<<<<<< HEAD
     width: 100%;
+=======
+    width: 510px;
+>>>>>>> 9a60d3effa723b9c09f102f102b1a60bdd70d378
     padding: 4px;
     margin-bottom: 10px;
     border: 0;

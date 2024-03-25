@@ -22,39 +22,29 @@ const ForgetPassword = () => {
 
   return (
     <div className="font-face-gm">
-       <nav className="navbar-signin">
-        <div className="navbar-logo-signin">
-          <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
-        </div>
-      </nav>
       <div className="login-container">
         <div className="login-form">
-          <p className="signin-txt">Reset your Password</p>
+          <p className="signin-txt">Forget your Password</p>
           <p className="no-account">
             Type in your registered email to reset your password
           </p>
-          <p className="no-account" style={{ fontFamily: 'Poppins, sans-serif', marginTop: '0px', fontSize: 'small', marginBottom: '80px' }}>
-           your password
-          </p>
           <form>
-          <label className="inpt-label">Email</label>
-            <div className="input-wrapper">
-              <label className="input-label" htmlFor="email">
-                <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
-              </label>
-              <input
-                id="email"
-                className="input-field-style"
-                type="email"
-                name="email"
-                placeholder="Enter your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
+            <label className="label">Email</label>
+            <InputField
+              type="email"
+              placeholder="Enter your email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-           
+            <div className="text">
+              <text
+                className="register-here"
+                onClick={() => (window.location.href = "/forgetpasswordreview")}
+              >
+                Next
+              </text>
+            </div>
 
             <button
               style={{

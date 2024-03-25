@@ -1,3 +1,72 @@
+<<<<<<< HEAD
+=======
+:root {
+  font-family: "Poppins", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  /*background-image:url('./assets/images/background.png') repeat;
+  */
+  background: radial-gradient(at top right,#678ebd 15%,  #123969 60%);
+}
+ 
+/* CSS code for setting background image */
+.background-image {
+  /* Set background image */
+  background-image: url('./assets/images/background.png');
+  /* Set background size to cover the entire element */
+  background-size: cover;
+  /* Set background position to center */
+  background-position: center;
+  /* Set background repeat to no-repeat */
+  background-repeat: no-repeat;
+  /* Optionally, set additional properties */
+  /* For example, set width and height to fill the screen */
+  width: 100vw;
+  height: 100vh;
+}
+
+
+
+
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+>>>>>>> 9a60d3effa723b9c09f102f102b1a60bdd70d378
 
 .poppins-thin {
   font-family: "Poppins", sans-serif;
@@ -107,4 +176,19 @@
   font-style: italic;
 }
 
+<<<<<<< HEAD
 
+=======
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+>>>>>>> 9a60d3effa723b9c09f102f102b1a60bdd70d378

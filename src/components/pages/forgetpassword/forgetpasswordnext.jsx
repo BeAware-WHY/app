@@ -1,16 +1,20 @@
 
 import Button from "../../resources/Button/button";
+import { useNavigate } from "react-router-dom";
 
 const forgetpasswordreview = () => {
-
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const navigate = useNavigate();
+  
   const handleNext = () => {
     // Handle next functionality
-    console.log("Next clicked");
+    navigate('/Signin');
     // Perform validation and other logic here
   };
 
   return (
     <div className="font-face-gm">
+
        <nav className="navbar-signin">
         <div className="navbar-logo-signin">
           <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
@@ -31,12 +35,16 @@ const forgetpasswordreview = () => {
               onChange={(e) => setPassword(e.target.value)}
             /> */}
 
-            <Button text="RESEND EMAIL" onClick={handleNext} />
+
+            // <Button text="RESEND EMAIL" onClick={handleNext} />
+            // <h1></h1>
+            
+            // <Button text="BACK TO LOGIN"  onClick={() => window.location.href='/signup'} />
+            <Button text="CONTACT SUPPORT" onClick={handleNext} />
             <h1></h1>
             
-            <Button text="BACK TO LOGIN"  onClick={() => window.location.href='/signup'} />
+            <Button text="BACK TO LOGIN"  onClick={handleNext} />
           </form>
-          <h1></h1>
           <h1></h1>
         </div>
         <div className="login-image">
