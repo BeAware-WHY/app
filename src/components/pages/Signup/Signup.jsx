@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import "./Signup.css";
+import React from "react";
 import "./Signup.css"; // Import CSS file for styling
+import { useState } from "react";
 import SwitchSelector from "react-switch-selector";
 import { database, auth } from "../firebase";
 import { setDoc, doc } from "firebase/firestore";
@@ -10,13 +12,19 @@ import Loader from "../../resources/Loader/loader";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import useAuthToken from "../../../constants/useAuthToken";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faLock,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-solid-svg-icons";
+
 
 const Signup = () => {
   const navigate = useNavigate();
   const { saveToken } = useAuthToken();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(""); // State for displaying error message
+  const [error, setError] = useState(""); 
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -82,16 +90,18 @@ const Signup = () => {
         uid: userCredential.user.uid
       };
 
+      // Store user data in Firestore with user's UID as document ID
+      //await setDoc(doc(database, "users", userCredential.user.uid), formData);
+
       await setDoc(doc(database, "users", userCredential.user.uid), formData);
       const res = await signInWithEmailAndPassword(auth, email, password);
       const accessToken = res.user.stsTokenManager.accessToken;
       saveToken(accessToken);
-      // Login successful
-      // User signed up and data stored successfully
       console.log("User signed up and data stored successfully");
 
       navigate("/createstream");
       window.location.reload(); 
+    
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         setError("Email is already in use. Please use a different email address.");
@@ -129,9 +139,16 @@ const Signup = () => {
     ({ value }) => value === "Sign up"
   );
 
+  // Render loader if isLoading is true
+
   return (
     <div className="font-face-gm">
-      {isLoading && <Loader />}
+    {isLoading && <Loader />}
+       <nav className="navbar-signin">
+        <div className="navbar-logo-signin">
+          <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
+        </div>
+      </nav>
       <div className="login-container">
         <div className="login-form">
           <div className="switch">
@@ -168,7 +185,7 @@ const Signup = () => {
               <div style={{ marginRight: "1rem" }}>
                 <label className="label">First Name</label>
                 <input
-                  className="input-firstname"
+                  className="input-field-style"
                   type="text"
                   name="firstName"
                   placeholder="Enter your First Name"
@@ -181,7 +198,7 @@ const Signup = () => {
                 <label className="label">Last Name</label>
 
                 <input
-                  className="input-lastname"
+                  className="input-field-style"
                   type="text"
                   name="lastName"
                   placeholder="Enter your Last Name"
@@ -208,7 +225,7 @@ const Signup = () => {
             <div>
             <label className="label">Password</label>
             </div>
-            <div style={{ position: 'relative', display: 'inline-block', marginBottom: '20px' }}>
+            <div>
               <input
                 className="input-field-style"
                 type={showPassword ? "text" : "password"}

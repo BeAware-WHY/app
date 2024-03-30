@@ -7,7 +7,12 @@ import { auth } from "../firebase";
 import SwitchSelector from "react-switch-selector";
 import Loader from "../../resources/Loader/loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faLock,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-solid-svg-icons";
 import useAuthToken from "../../../constants/useAuthToken";
 
 const Signin = () => {
@@ -21,11 +26,17 @@ const Signin = () => {
   const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    setIsLoading(true); // Set loading state to true
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-    // Basic validation for Email and Password
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true); 
+
+    try {
+     // Basic validation for Email and Password
     if (!email || !email.includes("@")) {
       setEmailError("Please enter a valid email address");
       setIsLoading(false);
@@ -42,16 +53,14 @@ const Signin = () => {
       setPasswordError("");
     }
 
-    try {
-      const res = await signInWithEmailAndPassword(auth, email, password);
-      const accessToken = res.user.stsTokenManager.accessToken;
-      saveToken(accessToken);
-      // Login successful
-      navigate("/Dashboard");
-      window.location.reload();
-      // Handle other logic based on the response
+    const res = await signInWithEmailAndPassword(auth, email, password);
+    const accessToken = res.user.stsTokenManager.accessToken;
+    saveToken(accessToken);
+    // Login successful
+    navigate("/Dashboard");
+    window.location.reload();
     } catch (error) {
-      // Handle login error
+      // Handle sign-in errors
       if (error.code === "auth/wrong-password") {
         alert("Incorrect email or password");
       } else {
@@ -59,11 +68,8 @@ const Signin = () => {
         alert("Error logging in:", error.message);
       }
     } finally {
-      setIsLoading(false); // Set loading state to false
+      setIsLoading(false);
     }
-  };
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
   };
 
   const options = [
@@ -82,17 +88,36 @@ const Signin = () => {
   ];
 
   const onChange = () => {
-    navigate('/Signup');
+    navigate("/Signup");
   };
 
-  const initialSelectedIndex = options.findIndex(({ value }) => value === "Sign in");
+  const initialSelectedIndex = options.findIndex(
+    ({ value }) => value === "Sign in"
+  );
+
+  const handleLogout = () => {
+    auth.signOut().then(() => {
+      // Logout successful
+      console.log('Logout successful');
+      navigate("/signin");
+      // Optionally, redirect the user to the login page or perform any other actions
+    }).catch((error) => {
+      // An error occurred during logout
+      console.error('Logout error:', error);
+    });
+  };
 
   return (
     <div className="font-face-gm">
-      {isLoading && <Loader />} {/* Display loader if isLoading is true */}
+      {isLoading && <Loader />}
+      <nav className="navbar-signin">
+        <div className="navbar-logo-signin">
+          <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
+        </div>
+      </nav>
       <div className="login-container">
         <div className="login-form">
-          <div className="switch">
+          <div className="signin-switch">
             <SwitchSelector
               onChange={onChange}
               options={options}
@@ -101,13 +126,14 @@ const Signin = () => {
               fontColor={"#000000"}
               selectedBackgroundColor={"#1B4375"}
               fontFamily="Poppins, sans-serif"
-              selectionIndicatorMargin={6}
+              fontSize={12}
+              selectionIndicatorMargin={8}
               disabled={false}
             />
           </div>
           <p className="signin-txt">Sign In</p>
-          <p className="no-account">If you don’t have an account register</p>
-          <div className="text">
+          <p className="no-account">If you don’t have an account</p>
+          <div className="register-here-text">
             You can{" "}
             <span
               className="register-here"
@@ -117,22 +143,33 @@ const Signin = () => {
             </span>
           </div>
           <form onSubmit={handleLogin}>
-            <label className="label">Email</label>
-            <input
-              className="input-field-style"
-              type="email"
-              name="email"
-              placeholder="Enter your email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
             {emailError && <p className="error-message">{emailError}</p>}
-            <div>
-              <label className="label">Password</label>
-            </div>
-            <div style={{ position: 'relative', display: 'inline-block', marginBottom: '20px' }}>
+            {passwordError && <p className="error-message">{passwordError}</p>}
+
+            <label className="inpt-label">Email</label>
+            <div className="input-wrapper">
+              <label className="input-label" htmlFor="email">
+                <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
+              </label>
               <input
+                id="email"
+                className="input-field-style"
+                type="email"
+                name="email"
+                placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <label className="inpt-label">Password</label>
+            <div className="input-wrapper">
+              <label className="input-label" htmlFor="password">
+                <FontAwesomeIcon icon={faLock} className="input-icon" />
+              </label>
+              <input
+                id="password"
                 className="input-field-style"
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -143,11 +180,10 @@ const Signin = () => {
               />
               <FontAwesomeIcon
                 icon={showPassword ? faEyeSlash : faEye}
-                className="eye-icon"
+                className="password-toggle-icon"
                 onClick={togglePasswordVisibility}
               />
             </div>
-            {passwordError && <p className="error-message">{passwordError}</p>}
 
             <div className="frgt-pass">
               <div className="chkbox">
@@ -162,18 +198,22 @@ const Signin = () => {
               </div>
               <label
                 className="register-here"
-                style={{ fontFamily: "Poppins, sans-serif" }}
                 onClick={() => (window.location = "/forgetpassword")}
               >
-                Forget Password
+                Forget Password?
               </label>
             </div>
 
             <Button text={"Login"} onClick={handleLogin} />
           </form>
+          {isLoading && <Loader />} {/* Display loader if isLoading is true */}
         </div>
+        <h4></h4>
         <div className="login-image">
-          <img src="./src/assets/images/login_page_image.png" alt="Login Image" />
+          <img
+            src="./src/assets/images/login_page_image.png"
+            alt="Login Image"
+          />
         </div>
       </div>
     </div>
@@ -181,4 +221,3 @@ const Signin = () => {
 };
 
 export default Signin;
-
