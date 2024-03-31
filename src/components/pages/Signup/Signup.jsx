@@ -1,6 +1,4 @@
-import "./Signup.css";
 import React from "react";
-import "./Signup.css"; // Import CSS file for styling
 import { useState } from "react";
 import SwitchSelector from "react-switch-selector";
 import { database, auth } from "../firebase";
@@ -17,6 +15,7 @@ import {
   faLock,
   faEye,
   faEyeSlash,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 
@@ -24,7 +23,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const { saveToken } = useAuthToken();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(""); 
+  const [error, setError] = useState("");
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -100,8 +99,8 @@ const Signup = () => {
       console.log("User signed up and data stored successfully");
 
       navigate("/createstream");
-      window.location.reload(); 
-    
+      window.location.reload();
+
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         setError("Email is already in use. Please use a different email address.");
@@ -116,6 +115,8 @@ const Signup = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+
   const options = [
     {
       label: "Sign in",
@@ -132,26 +133,27 @@ const Signup = () => {
   ];
 
   const onChange = () => {
-    navigate("/CreateStream");
+    navigate("/Signin");
   };
 
   const initialSelectedIndex = options.findIndex(
     ({ value }) => value === "Sign up"
   );
 
+
   // Render loader if isLoading is true
 
   return (
     <div className="font-face-gm">
-    {isLoading && <Loader />}
-       <nav className="navbar-signin">
+      {isLoading && <Loader />}
+      <nav className="navbar-signin">
         <div className="navbar-logo-signin">
           <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
         </div>
       </nav>
       <div className="login-container">
         <div className="login-form">
-          <div className="switch">
+          <div className="signin-switch">
             <SwitchSelector
               onChange={onChange}
               options={options}
@@ -160,15 +162,17 @@ const Signup = () => {
               fontColor={"#000000"}
               selectedBackgroundColor={"#1B4375"}
               fontFamily="Poppins, sans-serif"
-              selectionIndicatorMargin={6}
+              fontSize={12}
+              selectionIndicatorMargin={8}
               disabled={false}
+              optionBorderRadius={30}
+              wrapperBorderRadius={30}
             />
           </div>
           {error && <p className="error-message">{error}</p>}
           <p className="signin-txt">Sign Up</p>
           <p className="no-account">
-            If you have already registered.
-            <span className="register-here" onClick={() => navigate("/signin")}>
+            If you have already registered. <span className="register-here" onClick={() => navigate("/signin")}>
               Click here!
             </span>
           </p>
@@ -183,50 +187,74 @@ const Signup = () => {
               }}
             >
               <div style={{ marginRight: "1rem" }}>
-                <label className="label">First Name</label>
-                <input
-                  className="input-field-style"
-                  type="text"
-                  name="firstName"
-                  placeholder="Enter your First Name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
-                ></input>
+
+                <label className="inpt-label">First Name</label>
+                <div className="input-wrapper">
+                  <label className="input-label" htmlFor="firstname">
+                    <FontAwesomeIcon icon={faUser} className="input-icon" />
+                  </label>
+                  <input
+                    id="firstname"
+                    className="input-field-style"
+                    type="text"
+                    name="firstName"
+                    placeholder="Enter your First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
               <div style={{ margin: 0, marginTop: 0 }}>
-                <label className="label">Last Name</label>
-
-                <input
-                  className="input-field-style"
-                  type="text"
-                  name="lastName"
-                  placeholder="Enter your Last Name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                ></input>
+                <label className="inpt-label">Last Name</label>
+                <div className="input-wrapper">
+                  <label className="input-label" htmlFor="lastname">
+                    <FontAwesomeIcon icon={faUser} className="input-icon" />
+                  </label>
+                  <input
+                    id="lastname"
+                    className="input-field-style"
+                    type="text"
+                    name="lastName"
+                    placeholder="Enter your Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
             </div>
 
-            <label className="label">Email</label>
 
-            <input
-              className="input-field-style"
-              type="email"
-              name="email"
-              placeholder="Enter your email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            ></input>
-            
 
-            <div>
-            <label className="label">Password</label>
-            </div>
-            <div>
+
+
+
+            <label className="inpt-label">Email</label>
+            <div className="input-wrapper">
+              <label className="input-label" htmlFor="email">
+                <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
+              </label>
               <input
+                id="email"
+                className="input-field-style"
+                type="email"
+                name="email"
+                placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+
+            <label className="inpt-label">Password</label>
+            <div className="input-wrapper">
+              <label className="input-label" htmlFor="password">
+                <FontAwesomeIcon icon={faLock} className="input-icon" />
+              </label>
+              <input
+                id="password"
                 className="input-field-style"
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -236,11 +264,12 @@ const Signup = () => {
                 required
               />
               <FontAwesomeIcon
-                icon={showPassword ? faEyeSlash : faEye}
-                className="eye-icon"
+                icon={showPassword ? faEye : faEyeSlash}
+                className="password-toggle-icon"
                 onClick={togglePasswordVisibility}
               />
             </div>
+
             <div className="frgt-pass">
               <div className="chkbox">
                 <input
@@ -250,7 +279,10 @@ const Signup = () => {
                   name="lsRememberMe"
                   onChange={handleCheckboxChange}
                 />
-                <label> I agree to all the Terms and Privacy Policy </label>
+
+                <label className="inpt-label">
+                  I agree to all the <span className="blue-txt">Terms </span> and <span className="blue-txt"> Privacy Policy </span>
+                </label>
               </div>
             </div>
 
@@ -264,7 +296,7 @@ const Signup = () => {
           />
         </div>
       </div>
-     
+
     </div>
   );
 };

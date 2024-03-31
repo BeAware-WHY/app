@@ -34,11 +34,15 @@
 
     background-color: #E5E5E5;
     color: black;
+    width: fit-content;
     /* left: 450px; */
     /* border: none; */
-    padding: 10px 20px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
     border-radius: 20px;
-    margin-left: 1000px; /* Add margin to separate from navbar-profile */
+    
     cursor: pointer;
     display: block;
     z-index: 999;
@@ -47,6 +51,7 @@
 
 .new-stream-button:hover {
     background-color: #a8a7a7;
+    
 }
 
 .activeButton {
@@ -280,6 +285,92 @@
   top: 0; /* Stick to the top */
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
 /* .currentstream-main{
     
 } */
+
+
+/* Dropdown code updated start from here */
+
+.navbar-dashboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent; /* Make navbar transparent */
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+}
+
+.navbar-dashboard-right{
+  display: flex;
+  align-items: center;
+}
+
+
+.dropdown {
+  position: relative;
+  border-radius: 50px;
+  background-color: #E5E5E5;
+  width: 36px;
+  height: 30px;
+  align-items: center;
+  padding-top: 5px;
+  cursor: pointer;
+  
+
+}
+
+.dropdown-toggle {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.dropdown-toggle.active {
+  border-radius: 50%;
+  background-color: #E5E5E5; /* Highlight when dropdown is open */
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 2px solid white;
+  border-radius: 5px;
+  padding: 6px 0;
+  width: 70px;
+  height: 50px;
+  align-items: center;
+  align-self: center;
+}
+
+.dropdown-option {
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  width: 100%;
+  text-align: left;
+  background-color: white;
+}
+
+.dropdown-option:hover,
+.dropdown-option.highlighted {
+  background-color: #E5E5E5; /* Highlight when hovered or selected */
+}
+
+.new-stream-button,
+.dropdown {
+  margin-left: 14px; /* Push the elements to the right by consuming all available space */
+}
+
+
+
+/* Dropdown code updated till here */
+
+

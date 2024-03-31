@@ -4,6 +4,7 @@ body {
   width: 100%;
   height: 100%;
 
+
 }
 
 h1 {
@@ -15,8 +16,8 @@ h1 {
 
 .login-container {
   display: flex;
-    justify-content: space-between;
-    align-items: center;
+  justify-content: space-between;
+   
 
 }
 
@@ -24,6 +25,7 @@ h1 {
   font-family: "Poppins", sans-serif;
   font-size: small;
   margin-bottom: 28px;
+  text-align: start;
 }
 
 .font-face-gm {
@@ -32,17 +34,18 @@ h1 {
 
 /* Style for login form */
 .login-form {
-  width: 50%;
+  width: 40%;
   min-width: 20vw; /* Set a minimum width for the form */
   min-height: 70vh; /* Set a minimum height for the form */
  
   background-color: #d9d9d9;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 10px;
- 
-  align-self: center; /* Vertically center the form */
- 
+  padding: 30px;
+ margin-left: 100px;
+ margin-right: 50px;
+  align-self: self-start;
+  text-align: start;
 }
 
 /* Style for login image */
@@ -56,13 +59,19 @@ h1 {
     #678ebd 20%,
     #1b4375 80%
   );
+  
+ margin-right: 80px;
 }
 
 .signin-txt {
   font-weight: bolder;
   font-size: 20px;
   font-family: "Poppins", sans-serif;
-  padding-bottom: 14px;
+  padding-bottom: 0px;
+  margin-top: 8px;
+  margin-bottom: 0px;
+  align-self: flex-start;
+  text-align: left;
 }
 
 .navbar-signin {
@@ -85,6 +94,7 @@ h1 {
   margin-bottom: 4px;
   font-size: small;
   padding-bottom: 6px;
+  padding-top: 0%;
 }
 
 .register-here {
@@ -93,6 +103,7 @@ h1 {
   font-size: small;
   font-weight: 600;
   cursor: pointer;
+  padding: 0px;
 }
 
 .inpt-label {
@@ -103,6 +114,7 @@ h1 {
   color: #000842;
   margin-top: 10px;
   padding-bottom: 20px;
+  text-align: start;
 }
 
 .login-image img {
@@ -215,4 +227,16 @@ h1 {
   color: red;
   font-size: small;
   padding: 0px;
+}
+
+.signin-txt,
+.no-account,
+.register-here,
+.inpt-label,
+.frgt-pass,
+.signin-switch,
+.chkbox,
+.input-field-style,
+.error-message {
+  text-align: start;
 }

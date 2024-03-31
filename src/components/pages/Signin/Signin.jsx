@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import "./Signin.css";
 import Button from "../../resources/Button/button";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import SwitchSelector from "react-switch-selector";
 import Loader from "../../resources/Loader/loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -95,18 +95,6 @@ const Signin = () => {
     ({ value }) => value === "Sign in"
   );
 
-  const handleLogout = () => {
-    auth.signOut().then(() => {
-      // Logout successful
-      console.log('Logout successful');
-      navigate("/signin");
-      // Optionally, redirect the user to the login page or perform any other actions
-    }).catch((error) => {
-      // An error occurred during logout
-      console.error('Logout error:', error);
-    });
-  };
-
   return (
     <div className="font-face-gm">
       {isLoading && <Loader />}
@@ -129,6 +117,8 @@ const Signin = () => {
               fontSize={12}
               selectionIndicatorMargin={8}
               disabled={false}
+              optionBorderRadius={30}
+              wrapperBorderRadius={30}
             />
           </div>
           <p className="signin-txt">Sign In</p>
@@ -179,7 +169,7 @@ const Signin = () => {
                 required
               />
               <FontAwesomeIcon
-                icon={showPassword ? faEyeSlash : faEye}
+                icon={showPassword ? faEye : faEyeSlash}
                 className="password-toggle-icon"
                 onClick={togglePasswordVisibility}
               />
@@ -194,11 +184,11 @@ const Signin = () => {
                   name="lsRememberMe"
                   onChange={(e) => setIsChecked(e.target.checked)}
                 />
-                <label>Remember me</label>
+                <label className="inpt-label">Remember me</label>
               </div>
               <label
-                className="register-here"
-                onClick={() => (window.location = "/forgetpassword")}
+                className="inpt-label"
+                onClick={() => navigate("/forgetpassword")}
               >
                 Forget Password?
               </label>
