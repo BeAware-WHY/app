@@ -9,6 +9,10 @@ import { sendPasswordResetEmail } from "firebase/auth";
 
 const ForgetPassword = () => {
   const navigate = useNavigate();
+
+  const handleCancel = () => {
+    navigate('/signin');
+  };
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
@@ -75,7 +79,7 @@ const ForgetPassword = () => {
                   borderRadius: "30px",
                   backgroundColor: "#1B4375",
                   color: "white",
-                  marginBottom: "100px",
+                  marginBottom: "10px",
                   textAlign: "center",
                   textDecoration: "none",
                   display: "inline-block",
@@ -92,8 +96,41 @@ const ForgetPassword = () => {
                 Next
                 <FontAwesomeIcon icon={faArrowRight} style={{ marginLeft: "10px", height: "12px" }} />
               </button>
-            </div>
+            </div>         
+
+
           </form>
+
+
+          <div style={{ textAlign: 'center', marginTop: '10px' }}>
+      <button
+        onClick={handleCancel}
+        style={{
+          border: 'none',
+          borderRadius: '30px',
+          backgroundColor: '#1B4375',
+          color: 'white',
+          marginBottom: '100px',
+          textAlign: 'center',
+          textDecoration: 'none',
+          display: 'inline-block',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '12px',
+          fontFamily: 'Poppins, sans-serif',
+          transitionDuration: '0.4s',
+          cursor: 'pointer',
+          padding: '4px 60px',
+        }}
+        type="button"
+      >
+        Cancel
+      </button>
+    </div>
+
+
+
+
         </div>
         <div className="frgt-pass-image">
           <img src="./src/assets/images/frgt_pass_img.png" alt="Login Image" />

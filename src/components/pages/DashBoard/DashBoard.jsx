@@ -85,22 +85,32 @@ function CurrentStream() {
 }
 
 
+
 function PastStream() {
+    // Generate an array of 8 elements
+    const items = Array.from({ length: 8 }, (_, index) => index + 1);
+
     return (
-        <>
-            <div className="past-stream-container">
-                <div className="past-streams-card">
-                    {/* <div className="past-streams-rounded-square"></div> */}
-                    <div className="past-streams-rectangle"></div>
-                    <div className="past-streams-logo">
-                        <img src="logo.png" alt="Company Logo" />
+        <div className="container">
+            <div className="scrollable-container">
+                {items.map((item) => (
+                    <div key={item} className="past-stream-container">
+                        <div className="past-streams-card">
+                            {/* Uncomment if you want to include the rounded square */}
+                            {/* <div className="past-streams-rounded-square"></div> */}
+                            <div className="past-streams-rectangle"></div>
+                            <div className="past-streams-logo">
+                                <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
+                            </div>
+                            <div className="past-streams-company-name">Company Name</div>
+                        </div>
                     </div>
-                    <div className="past-streams-company-name">Company Name</div>
-                </div>
+                ))}
             </div>
-        </>
+        </div>
     );
 }
+
 
 
 
@@ -124,6 +134,7 @@ function DashBoard() {
         } else {
             // Implement profile functionality
             console.log('Viewing profile...');
+            navigate("/userprofile")
         }
         setIsOpen(false);
     };
@@ -184,7 +195,7 @@ function DashBoard() {
     return (
         <div className="background">
             <nav className="navbar-dashboard">
-                <div className="navbar-logo">
+                <div className="navbar-logo-dashboard">
                     <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
                 </div>
                 <div className='navbar-dashboard-right'>
@@ -256,6 +267,7 @@ function DashBoard() {
                 </div>
             </div>
             <br></br>
+            
             {isCurrentStreamActive ? <CurrentStream /> : <PastStream />}
         </div>
     );
