@@ -1,0 +1,155 @@
+/* Header */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color:#1B4375; /* Change background color as needed */
+    color: white;
+}
+.profile-field span {
+    border: 1px solid #ccc;
+    padding: 5px;
+    display: inline-block;
+
+    border-radius: 5px;
+}
+.centered-table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+body {
+    overflow: hidden;
+}
+
+.label-cell {
+    text-align: center;
+}
+
+
+
+
+.profile-table span {
+  display: inline-block;
+  height: 30px; /* Set a fixed height */
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
+ /* Remove default focus outline */
+}
+
+.profile-table {
+  border-collapse: separate; /* Use separate border model */
+}
+
+.logo-container {
+     display: flex;
+    justify-content: flex-start; /* Align items to the start (left) */
+    align-items: center; /* Center items vertically */
+    margin-left: 20px;
+}
+
+.logo-container img {
+    height: 30px; /* Adjust the logo height as needed */
+}
+
+
+.navbar-logo img {
+    height: 50px; /* Adjust logo height as needed */
+}
+
+.navbar-profile {
+    cursor: pointer;
+}
+
+.profile-icon {
+    margin-right: 10px;
+}
+
+.profile-popup {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    display: none;
+}
+
+.profile-icon.active + .profile-popup {
+    display: block;
+}
+
+/* Vertical Navigation */
+.vertical-nav {
+    width: 200px;
+    background-color: #1B4375; /* Change background color as needed */
+    height: calc(100vh - 70px); /* Adjust height based on header height */
+    position: fixed;
+    top: 77px; /* Adjust top position based on header height */
+    left: 0;
+    overflow-y: auto;
+    border-right: 1px solid #ccc;
+}
+
+.vertical-nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.vertical-nav li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    color: white;
+}
+
+.vertical-nav li:hover {
+    background-color:#CADBEC;
+}
+.views{
+ background: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45));
+    color: white;
+}
+.label-cell {
+    text-align: right;
+    padding-right: 10px;
+}
+
+.profile-table {
+    width: 80%;
+    border-collapse: collapse;
+}
+
+.profile-table td {
+    padding: 5px;
+}
+
+.profile-table td span {
+    display: inline-block;
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+.profile-table td label {
+    font-weight: bold;
+}
+
+.profile-table td:nth-child(2),
+.profile-table td:nth-child(4) {
+    width: 30%;
+}
+
+.profile-table td:nth-child(3),
+.profile-table td:nth-child(4) {
+    padding-left: 10px;
+}
+
+.profile-table td:last-child {
+    border-bottom: none;
+}

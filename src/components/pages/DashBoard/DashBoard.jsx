@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './DashBoard.css';
 // import './CreateStream/CreateStream.css'
 // import './src/components/pages/CreateStream/CreateStream.css'
@@ -85,46 +85,103 @@ function CurrentStream() {
 }
 
 
+
 function PastStream() {
+    // Generate an array of 8 elements
+    const items = Array.from({ length: 8 }, (_, index) => index + 1);
+
     return (
-        <>
-            <div className="past-stream-container">
-                <div className="past-streams-card">
-                    {/* <div className="past-streams-rounded-square"></div> */}
-                    <div className="past-streams-rectangle"></div>
-                    <div className="past-streams-logo">
-                        <img src="logo.png" alt="Company Logo" />
+        <div className="container">
+            <div className="scrollable-container">
+                {items.map((item) => (
+                    <div key={item} className="past-stream-container">
+                        <div className="past-streams-card">
+                            {/* Uncomment if you want to include the rounded square */}
+                            {/* <div className="past-streams-rounded-square"></div> */}
+                            <div className="past-streams-rectangle"></div>
+                            <div className="past-streams-logo">
+                                <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
+                            </div>
+                            <div className="past-streams-company-name">Company Name</div>
+                        </div>
                     </div>
-                    <div className="past-streams-company-name">Company Name</div>
-                </div>
+                ))}
             </div>
-        </>
+        </div>
     );
 }
 
 
 
 
+
 function DashBoard() {
-    const [profileClicked, setProfileClicked] = useState(false);
+
+    {/* Dropdown code updated start from here*/ }
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [highlightedOption, setHighlightedOption] = useState(null);
+
+
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleOptionClick = (option) => {
+        if (option === 'Logout') {
+            // Implement logout functionality
+            console.log('Logging out...');
+        } else {
+            // Implement profile functionality
+            console.log('Viewing profile...');
+            navigate("/userprofile")
+        }
+        setIsOpen(false);
+    };
+    {/* Dropdown code updated till here*/ }
+
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
+
+
+
     const navigate = useNavigate();
     const { removeToken } = useAuthToken();
     const newStream = () => {
         navigate('/createstream');
     };
-    const handleLogout = async () => {
+
+    {/* logout code updated working take from here */ }
+    const handleLogout = async (e) => {
         try {
-            // await auth.signOut(); // Sign out the user
+            await auth.signOut(auth);
             removeToken(); // Remove the authentication token
             navigate('/signin'); // Redirect to the signin page
+            window.location.reload();
+            alert('User signed out successfully');
         } catch (error) {
             console.error('Error occurred during logout:', error);
+            alert('Error occurred during logout:', error);
             // Handle error
         }
     };
-    const toggleProfile = () => {
-        setProfileClicked(!profileClicked);
-    };
+    {/* logout code updated working till here */ }
+
+
+
 
     const [isCurrentStreamActive, setIsCurrentStreamActive] = useState(true);
 
@@ -137,36 +194,80 @@ function DashBoard() {
     };
     return (
         <div className="background">
-            <nav className="navbar">
-                <div className="navbar-logo">
+            <nav className="navbar-dashboard">
+                <div className="navbar-logo-dashboard">
                     <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
                 </div>
-                <button className="new-stream-button" onClick={newStream}>New Stream</button>
-                {/* <Link to="/createstream" className="new-stream-button">New Stream</Link> */}
-                <div className="navbar-profile" onClick={toggleProfile}>
-                    <div className={`profile-icon ${profileClicked ? 'active' : ''}`}>
-                        <FontAwesomeIcon icon={faUserAlt} />
+                <div className='navbar-dashboard-right'>
+                    <button className="new-stream-button" onClick={newStream}>
+                        New Stream
+                    </button>
+                    {/* <Link to="/createstream" className="new-stream-button">New Stream</Link> */}
+
+                    {/* Dropdown code update start from here*/}
+                    <div className="dropdown" ref={dropdownRef}>
+                        <button className={`dropdown-toggle ${isOpen ? 'active' : ''}`} onClick={toggleDropdown}>
+                            <FontAwesomeIcon className='dropdown-dashboard-icon' icon={faUserAlt} />
+                        </button>
+                        {isOpen && (
+                            <div className="dropdown-menu">
+                                <button
+                                    className={`dropdown-option ${highlightedOption === 'Profile' ? 'highlighted' : ''}`}
+                                    onClick={() => handleOptionClick('Profile')}
+                                    onMouseEnter={() => setHighlightedOption('Profile')}
+                                    onMouseLeave={() => setHighlightedOption(null)}
+                                >
+                                    Profile
+                                </button>
+                                <button
+                                    className={`dropdown-option ${highlightedOption === 'Logout' ? 'highlighted' : ''}`}
+                                    onClick={handleLogout}
+                                    onMouseEnter={() => setHighlightedOption('Logout')}
+                                    onMouseLeave={() => setHighlightedOption(null)}
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        )}
                     </div>
-                    {profileClicked && (
-                        <div className="profile-popup">
-                            <ul>
-                                <li>Profile</li>
-                                <li onClick={handleLogout}>Logout</li>
-                            </ul>
-                        </div>
-                    )}
                 </div>
+
+
+
+                {/* Dropdown code update till here*/}
             </nav>
             <div className="image-corner-right">
                 <img src="./src/assets/images/bgglobe.png" alt="Background Globe" />
             </div>
-            {isCurrentStreamActive ? <CurrentStreamHeading /> : <PastStreamHeading />}
+            <br></br>
+            {isCurrentStreamActive ? (
+                <CurrentStreamHeading />
+            ) : (
+                <PastStreamHeading />
+            )}
+            <br></br>
             <div className="stream-buttons">
                 <div className="toggle-button-bg">
-                    <button className={isCurrentStreamActive ? 'activeButton' : 'inactiveButton'} onClick={handleCurrentStreamClick}><b>Current Stream</b></button>
-                    <button className={!isCurrentStreamActive ? 'activeButton' : 'inactiveButton'} onClick={handlePastStreamClick}><b>Past Stream</b></button>
+                    <button
+                        className={
+                            isCurrentStreamActive ? "activeButton" : "inactiveButton"
+                        }
+                        onClick={handleCurrentStreamClick}
+                    >
+                        <b>Current Stream</b>
+                    </button>
+                    <button
+                        className={
+                            !isCurrentStreamActive ? "activeButton" : "inactiveButton"
+                        }
+                        onClick={handlePastStreamClick}
+                    >
+                        <b>Past Stream</b>
+                    </button>
                 </div>
             </div>
+            <br></br>
+            
             {isCurrentStreamActive ? <CurrentStream /> : <PastStream />}
         </div>
     );
