@@ -27,7 +27,11 @@ function PastStreamHeading() {
 
 function CurrentStream() {
     const [text, setText] = useState('');
-
+    const navigate = useNavigate();
+    const handleEditStream = () => {
+        // Navigate to the dashboard screen
+        navigate('/editstream');
+    };
     const handleCopy = async () => {
         // Copy text to clipboard logic here
         try {
@@ -38,14 +42,15 @@ function CurrentStream() {
             alert('Failed to copy text!');
         }
     };
-    return (<div className="currentstream-main">
+    return (
+    <div className="currentstream-main">
         <div className="image-corner-left-currentstream">
             <img src="./src/assets/images/dashboard.png" alt="personstreamcreate" />
         </div>
         <div className="stream-card-container-currentstream">
             <div className="stream-card-currentstream">
                 <div className="logo-column">
-                    <div className="logo-placeholder-currentstream">
+                    <div className="logo-placeholder">
                         <img src="" alt="Company Logo" />
                     </div>
                     <div className="download-buttons-pdf">
@@ -71,13 +76,16 @@ function CurrentStream() {
                     <textarea disabled className="stream-desc-from-database" placeholder="Enter Stream Description"></textarea>
                 </div>
                 <div className="edit-column">
-                    <div className="edit-icon-createstream" onClick={() => document.getElementById('logoInput').click()}>
+                    {/* <div className="edit-icon-createstream" onClick={handleEditStream}>
                         <FontAwesomeIcon icon={faPencilAlt} />
-                    </div>
+                    </div> */}
                     <div className="download-buttons-qr">
                         <button type="submit" className="eventbutton">Download QR</button>
                     </div>
                 </div>
+            </div>
+            <div className="edit-icon-createstream" onClick={handleEditStream}>
+                <FontAwesomeIcon icon={faPencilAlt} />
             </div>
         </div>
     </div>

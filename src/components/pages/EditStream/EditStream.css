@@ -1,0 +1,155 @@
+.navbar-editstream{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent; /* Make navbar transparent */
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .navbar-editstream-right{
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-logo-editstream img {
+      height: 30px;
+      margin-right: 10px;
+      margin-top: 0px;
+  }
+
+  .card-container-editstream {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+  }
+  
+  .card-editstream {
+    width: 500px;
+    height: 320px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.45);
+    border-radius: 10px;
+    display: flex;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+  }
+  
+  .top-content-editstream{
+    display: flex;
+    flex-direction: row;
+  }
+
+  .bottom-content-editstream{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+  .left-content-editstream {
+    flex: 1;
+    margin-right: 50px;
+    justify-content: center;
+  }
+  
+  .right-content-editstream {
+    flex: 2;
+    text-align: left !important;
+    margin-top: 10px;
+  }
+
+  .streamNameInput-editstream{
+    width: 250px;
+    flex: 1;
+  }
+
+  .streamColorInput-editstream{
+    width: 60px;
+    /* flex: 2; */
+    cursor: pointer;
+    height: 30px;
+    padding: 2px !important;
+  }
+
+  .streamName-editstream, .streamColor-editstream{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-bottom: 20px;
+  }
+
+  .image-corner-left-editstream {
+    position: absolute;
+    bottom: 0;
+    left: 253px;
+  }
+  
+  .image-corner-left-editstream img {
+    width: 250px; /* Make the image responsive */
+    max-width: 400px; /* Ensure the image does not exceed its container */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  .buttons-editstream {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 0 10px;
+  }
+  
+  .buttons-editstream button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .eventbutton-editstream {
+    width: 130px;
+    background-color: #1B4375;
+    color: #fff;
+  }
+
+  .edit-icon-editstream {
+    position: relative;
+    bottom: -60px; /* Adjust to move inside if necessary */
+    right: 50px; /* Adjust to move inside if necessary */
+    color: #000;
+    height: 20px;
+    width: 20px;
+    padding: 5px;
+    background-color: #CADBEC;
+    border-radius: 50%;
+    border-style: dashed;
+    border-width: 1px;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .stream-desc-from-database-editstream {
+    width: 500px;
+    height: 80px;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #CADBEC;
+    box-sizing: border-box;
+    background-color: #CADBEC;
+    border-radius: 5px;
+}
+
+.save-icon-editstream{
+    position: relative;
+    color: #000; /* Adjust icon color as needed */
+    /* font-size: 20px; Adjust icon size as needed */
+    height: 20px;
+    width: 20px;
+    padding: 5px;
+    background-color: #CADBEC;
+    border-radius: 50%;
+    border-style:dashed;
+    border-width: 1px;
+    cursor: pointer;
+    top: -180px;
+    right: 20px;
+}

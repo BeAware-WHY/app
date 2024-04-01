@@ -9,6 +9,7 @@ import CreateStream from './components/pages/Createstream/CreateStream';
 import DashBoard from './components/pages/DashBoard/DashBoard';
 import { isTokenExpired } from './utils/authUtils';
 import UserProfile from './components/pages/UserProfile/UserProfile';
+import EditStream from './components/pages/EditStream/EditStream';
 
 function App() {
   const tokenExpired = isTokenExpired();
@@ -27,6 +28,7 @@ function App() {
       ) : (
         <Routes>
           <Route path='/createstream' element={<CreateStream />} />
+          <Route path='/editstream' element={<EditStream />} />
           <Route path='/dashboard' element={<DashBoard />} />
           <Route path='/userprofile' element={<UserProfile/>}  />
           {/* Redirect to Dashboard for other routes if authenticated */}

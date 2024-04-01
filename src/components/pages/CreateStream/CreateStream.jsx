@@ -1,30 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './CreateStream.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserAlt, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { collection, addDoc } from 'firebase/firestore';
 import { database } from '../firebase';
 import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
+import useAuthToken from "../../../constants/useAuthToken";
 // import QRCode from 'qrcode.react';
 
 
 function CreateStream() {
-    const [profileClicked, setProfileClicked] = useState(false);
+    // const [profileClicked, setProfileClicked] = useState(false);
     const [streamName, setStreamName] = useState('');
     const [streamColor, setStreamColor] = useState('#000000');
     const [streamDescription, setStreamDescription] = useState('');
     const [logoImage, setLogoImage] = useState(null); // State to store the uploaded logo image
     const [streamDate] = useState(new Date()); 
     const navigate = useNavigate();
-
+    const { removeToken } = useAuthToken();
+    const [isOpen, setIsOpen] = useState(false);
+    const [highlightedOption, setHighlightedOption] = useState(null);
     const handleCancel = () => {
         // Navigate to the dashboard screen
         navigate('/dashboard');
     };
-    const toggleProfile = () => {
-        setProfileClicked(!profileClicked);
+    // const toggleProfile = () => {
+    //     setProfileClicked(!profileClicked);
+    // };
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen);
+    };
+    const handleOptionClick = (option) => {
+        if (option === 'Logout') {
+            // Implement logout functionality
+            console.log('Logging out...');
+        } else {
+            // Implement profile functionality
+            console.log('Viewing profile...');
+            navigate("/userprofile")
+        }
+        setIsOpen(false);
     };
 
+    const handleLogout = async (e) => {
+        try {
+            await auth.signOut(auth);
+            removeToken(); // Remove the authentication token
+            navigate('/signin'); // Redirect to the signin page
+            window.location.reload();
+            alert('User signed out successfully');
+        } catch (error) {
+            console.error('Error occurred during logout:', error);
+            alert('Error occurred during logout:', error);
+            // Handle error
+        }
+    };
+    const dropdownRef = useRef(null);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
     const handleLogoChange = (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
@@ -95,23 +140,43 @@ function CreateStream() {
 
     return (
         <div className="background">
-            <nav className="navbar">
-                <div className="navbar-logo">
+            <nav className="navbar-createstream">
+                <div className="navbar-logo-createstream">
                     <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
                 </div>
-                <div className="navbar-profile" onClick={toggleProfile}>
-                    <div className={`profile-icon ${profileClicked ? 'active' : ''}`}>
-                        <FontAwesomeIcon icon={faUserAlt} />
+                <div className='navbar-createstream-right'>
+
+                    {/* Dropdown code update start from here*/}
+                    <div className="dropdown" ref={dropdownRef}>
+                        <button className={`dropdown-toggle ${isOpen ? 'active' : ''}`} onClick={toggleDropdown}>
+                            <FontAwesomeIcon className='dropdown-dashboard-icon' icon={faUserAlt} />
+                        </button>
+                        {isOpen && (
+                            <div className="dropdown-menu">
+                                <button
+                                    className={`dropdown-option ${highlightedOption === 'Profile' ? 'highlighted' : ''}`}
+                                    onClick={() => handleOptionClick('Profile')}
+                                    onMouseEnter={() => setHighlightedOption('Profile')}
+                                    onMouseLeave={() => setHighlightedOption(null)}
+                                >
+                                    Profile
+                                </button>
+                                <button
+                                    className={`dropdown-option ${highlightedOption === 'Logout' ? 'highlighted' : ''}`}
+                                    onClick={handleLogout}
+                                    onMouseEnter={() => setHighlightedOption('Logout')}
+                                    onMouseLeave={() => setHighlightedOption(null)}
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        )}
                     </div>
-                    {profileClicked && (
-                        <div className="profile-popup">
-                            <ul>
-                                <li>Profile</li>
-                                <li>Logout</li>
-                            </ul>
-                        </div>
-                    )}
                 </div>
+
+
+
+                {/* Dropdown code update till here*/}
             </nav>
             <div className="image-corner-right">
                 <img src="./src/assets/images/bgglobe.png" alt="Background Globe" />
@@ -119,8 +184,9 @@ function CreateStream() {
             <div className="image-corner-left">
                 <img src="./src/assets/images/personstreamcreate.png" alt="personstreamcreate" />
             </div>
+            <br></br>
             <div className="generate-stream-text">Let&apos;s GENERATE greatness together!</div>
-            
+            <br></br>
             <div className="stream-card-container">
                 <div className="stream-card">
                     <div className="left-content">
@@ -179,7 +245,7 @@ function CreateStream() {
                                     </div>
                                     <label htmlFor="streamDescription"><b>Stream Description:</b></label>
                                     <textarea
-                                        id="streamDescription"
+                                        id="streamDescription-editstream"
                                         placeholder="You can write what is the purpose of this stream"
                                         value={streamDescription}
                                         onChange={(e) => setStreamDescription(e.target.value)}

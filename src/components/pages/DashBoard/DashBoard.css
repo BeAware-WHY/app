@@ -1,7 +1,7 @@
 .image-corner-left-currentstream {
     position: absolute;
     bottom: 0;
-    left: 195px;
+    left: 180px;
   }
   
   .image-corner-left-currentstream img {
@@ -92,7 +92,7 @@
     justify-content: center;
 }
 
-.logo-placeholder-currentstream {
+.logo-placeholder {
     position: relative;
     width: 150px;
     height: 150px;
@@ -164,15 +164,19 @@
     cursor: pointer;
   }
 
+  
+
   .semi-circle {
-    width: 200px;
-    height: 70px; /* Double the desired height of the semi-circle */
+    width: 140px; /* This should be the diameter of the circle you want to create */
+    height: 70px; /* Half of the width to create a perfect semi-circle */
     background-color: #007bff;
-    border-radius: 0 0 150px 150px; /* Use half of the height for the bottom-left and bottom-right corners */
+    border-radius: 0 0 70px 70px; /* Apply border-radius to only the bottom corners */
     margin-bottom: 10px;
-    overflow: hidden; /* Ensure the semi-circle shape is maintained */
+    overflow: hidden;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
 }
+
+
 .streamname-from-database {
     margin-bottom: 10px;
     margin-top: 10px;
@@ -196,7 +200,7 @@
 }
 
 .edit-icon-createstream{
-    position: absolute;
+    position: relative;
     color: #000; /* Adjust icon color as needed */
     /* font-size: 20px; Adjust icon size as needed */
     height: 20px;
@@ -207,8 +211,8 @@
     border-style:dashed;
     border-width: 1px;
     cursor: pointer;
-    margin-top: -10px;
-    margin-left: 170px;
+    top: -180px;
+    right: 20px;
 }
   .copy-button {
     position: absolute;
