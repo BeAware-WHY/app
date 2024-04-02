@@ -87,7 +87,7 @@ function CreateStream() {
         event.preventDefault();
     
         try {
-            const response = await fetch('https://localhost:7050/api/v1.0/stream/create-stream', {
+            const response = await fetch('https://api.deafassistant.com/stream/CreateStreamWithStyle', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

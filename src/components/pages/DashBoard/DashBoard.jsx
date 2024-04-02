@@ -5,8 +5,9 @@ import './DashBoard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { Link } from 'react-router-dom';
 import { faUserAlt, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
-// import { collection, addDoc } from 'firebase/firestore';
-// import { database } from '../firebase';
+import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { database } from '../firebase';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { auth } from "../firebase";
@@ -95,27 +96,47 @@ function CurrentStream() {
 
 
 function PastStream() {
+    const [items, setItems] = useState([]);
+    const storage = getStorage();
     // Generate an array of 8 elements
-    const items = Array.from({ length: 8 }, (_, index) => index + 1);
+    // const items = Array.from({ length: 8 }, (_, index) => index + 1);
+    useEffect(() => {
+        const fetchStreams = async () => {
+          const q = query(collection(database, "streamData"), where("userId", "==", "zYCCtNjmaNSNnef5iadSRssYN8U2")); // Replace 'loggedInUserId' with actual logged-in user ID
+          const querySnapshot = await getDocs(q);
+          const streams = [];
+    
+          for (let doc of querySnapshot.docs) {
+            const data = doc.data();
+            // Assuming data.logo is the path in Firebase Storage to the logo image
+            const logoUrl = await getDownloadURL(ref(storage, data.logoImageUrl));
+            streams.push({ ...data, logoUrl });
+          }
+    
+          setItems(streams);
+        };
+    
+        fetchStreams();
+      }, []);
 
     return (
         <div className="container">
-            <div className="scrollable-container">
-                {items.map((item) => (
-                    <div key={item} className="past-stream-container">
-                        <div className="past-streams-card">
-                            {/* Uncomment if you want to include the rounded square */}
-                            {/* <div className="past-streams-rounded-square"></div> */}
-                            <div className="past-streams-rectangle"></div>
-                            <div className="past-streams-logo">
-                                <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
-                            </div>
-                            <div className="past-streams-company-name">Company Name</div>
-                        </div>
-                    </div>
-                ))}
+        <div className="scrollable-container">
+          {items.map((item, index) => (
+            <div key={index} className="past-stream-container">
+              <div className="past-streams-card">
+                {/* Uncomment if you want to include the rounded square */}
+                {/* <div className="past-streams-rounded-square"></div> */}
+                <div className="past-streams-rectangle"></div>
+                <div className="past-streams-logo">
+                  <img src={item.logoUrl} alt="Company Logo" />
+                </div>
+                <div className="past-streams-company-name">{item.streamName}</div> {/* Replace `item.name` with your actual field name for the stream name */}
+              </div>
             </div>
+          ))}
         </div>
+      </div>
     );
 }
 
