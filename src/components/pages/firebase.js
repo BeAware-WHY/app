@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth"
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, orderBy } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCXZqysqsh9egeynwFIdnMlcA0dAtq91aA",
@@ -39,6 +39,41 @@ const getUserIDFromAuthToken = async () => {
     return null;
   }
 };
-export { app, auth, database, getUserIDFromAuthToken };
+
+const fetchDataForUserId = async () => {
+  try {
+    // Get the user ID from the authentication token
+    // const userId = await getUserIDFromAuthToken();
+    const userId = "zYCCtNjmaNSNnef5iadSRssYN8U2";
+    console.log("47----",userId);
+    if (userId) {
+      // Query to retrieve data for the specified user ID
+      const q = query(collection(database, 'streamData'), where('userId', '==', userId), orderBy('streamDate', 'desc'));
+
+      const querySnapshot = await getDocs(q);
+
+      // Initialize an array to store the retrieved data
+      const userData = [];
+
+      // Iterate through the documents
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        userData.push(data);
+      });
+      return userData; // Return the retrieved data
+    } else {
+      console.log("No user ID found.");
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return null;
+  }
+};
+
+
+
+export { app, auth, database, getUserIDFromAuthToken, fetchDataForUserId, collection, query, where, getDocs };
 
 // export const database = getAuth(app);
+
