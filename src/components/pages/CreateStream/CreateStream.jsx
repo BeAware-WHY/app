@@ -7,7 +7,9 @@ import { database } from '../firebase';
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import useAuthToken from "../../../constants/useAuthToken";
-// import QRCode from 'qrcode.react';
+import { app, getUserIDFromAuthToken } from './../firebase';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import QRCode from 'qrcode';
 
 
 function CreateStream() {
@@ -16,7 +18,7 @@ function CreateStream() {
     const [streamColor, setStreamColor] = useState('#000000');
     const [streamDescription, setStreamDescription] = useState('');
     const [logoImage, setLogoImage] = useState(null); // State to store the uploaded logo image
-    const [streamDate] = useState(new Date()); 
+    const [streamDate] = useState(new Date());
     const navigate = useNavigate();
     const { removeToken } = useAuthToken();
     const [isOpen, setIsOpen] = useState(false);
@@ -83,11 +85,24 @@ function CreateStream() {
         }
     };
 
+    const storage = getStorage(app);
+
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
+        console.log(logoImage)
+        const userId = await getUserIDFromAuthToken();
+        const logoStorageRef = ref(storage, `logo/${userId}/${streamName}`);
+        console.log(logoStorageRef)
+        const imageBlob = await fetch(logoImage).then((res) => res.blob());
+        await uploadBytes(logoStorageRef, imageBlob);
+
+        const logoImageUploadUrl = await getDownloadURL(logoStorageRef);
+        console.log(logoImageUploadUrl)
+
         try {
-            const response = await fetch('https://localhost:7050/api/v1.0/stream/create-stream', {
+            // const userId = await getUserIDFromAuthToken();
+            console.log("Started request")
+            const response = await fetch('/api/stream/CreateStreamWithStyle', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -95,38 +110,39 @@ function CreateStream() {
                 body: JSON.stringify({
                     name: streamName,
                     bannerColor: streamColor,
-                    logoUrl: logoImage // Assuming logoImage is the URL of the uploaded logo
+                    logoUrl: logoImageUploadUrl // Assuming logoImage is the URL of the uploaded logo
                 })
             });
-            
+            console.log(response)
+
             if (response.ok) {
                 const data = await response.json();
                 console.log('File Path:', data.filePath);
-    
-                const qrCodeData = JSON.stringify({
-                    name: streamName,
-                    bannerColor: streamColor,
-                    logoUrl: logoImage,
-                    filePath: data.filePath
-                });
-                const qrCodeDataURL = `data:image/svg+xml;base64,${btoa(qrCodeData)}`;
-    
+
+
+
+                const qrCodeDataURL = await QRCode.toDataURL(data.filePath);
+                const qrBlob = await fetch(qrCodeDataURL).then((res) => res.blob());
+                const qrStorageRef = ref(storage, `QR/${userId}/${streamName}.jpg`);
+                await uploadBytes(qrStorageRef, qrBlob);
+
                 // Store form data and API response in Firebase
                 const formData = {
+                    userId,
                     streamName,
                     streamColor,
                     streamDescription,
-                    logoImage,
-                    qrCodeDataURL,
+                    logoImageUrl: `logo/${userId}/${streamName}`,
+                    qrCodeDataURL: `QR/${userId}/${streamName}`,
                     filePath: data.filePath,
                     streamDate: streamDate.toISOString()
                 };
-    
+
                 // Add a document to the "streamData" collection in Firebase
                 await addDoc(collection(database, "streamData"), formData);
-    
+
                 console.log('Form data and API response saved in Firebase successfully!');
-                
+
                 // Perform any further actions based on the response from the backend, such as redirecting or displaying a success message
             } else {
                 console.error('Failed to create stream:', response.statusText);
@@ -200,7 +216,7 @@ function CreateStream() {
                             </div>
                             <div className="edit-icon" onClick={() => document.getElementById('logoInput').click()}>
                                 <FontAwesomeIcon icon={faPencilAlt} />
-                            </div> 
+                            </div>
                             <input
                                 type="file"
                                 id="logoInput"

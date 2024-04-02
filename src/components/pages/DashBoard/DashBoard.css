@@ -255,7 +255,7 @@
 
 .past-streams-card {
   width: 180px;
-  height: 320px;
+  height: 250px;
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 1);
   background-color: #CADBEC;
@@ -307,7 +307,7 @@
 .past-streams-rectangle {
   width: 100%; /* Full width */
   height: 100px; /* Adjust height as needed */
-  background-color: #1e90ff; /* Your color */
+  /* background-color: #1e90ff; Your color */
   opacity: 0.5;
   border-bottom-left-radius: 20px; /* Same as card border-radius */
   border-bottom-right-radius: 20px; 
