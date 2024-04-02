@@ -5,7 +5,7 @@ import './DashBoard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { Link } from 'react-router-dom';
 import { faUserAlt, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
-import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { database } from '../firebase';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
@@ -102,18 +102,25 @@ function PastStream() {
     // Generate an array of 8 elements
     // const items = Array.from({ length: 8 }, (_, index) => index + 1);
     useEffect(() => {
-        (async () => { // Immediately invoked async function
+        (async () => {
           const userId = await getUserIDFromAuthToken();
           console.log(userId);
           const fetchStreams = async () => {
-            const q = query(collection(database, "streamData"), where("userId", "==", userId)); // Use the awaited userId
+            const q = query(collection(database, "streamData"), where("userId", "==", userId), orderBy("streamDate", "desc"));
             const querySnapshot = await getDocs(q);
             const streams = [];
       
             for (let doc of querySnapshot.docs) {
               const data = doc.data();
+              // Convert streamDate from Timestamp to JavaScript Date, if necessary
+              const streamDate = data.streamDate?.toDate ? data.streamDate.toDate() : data.streamDate;
               const logoUrl = await getDownloadURL(ref(storage, data.logoImageUrl));
-              streams.push({ ...data, logoUrl, backgroundColor: data.streamColor });
+              streams.push({ ...data, logoUrl, backgroundColor: data.streamColor, streamDate });
+            }
+      
+            // Remove the first element (the latest stream) if there's more than one stream
+            if (streams.length > 1) {
+              streams.shift(); // Removes the first element from the array
             }
       
             setItems(streams);
@@ -121,8 +128,7 @@ function PastStream() {
       
           await fetchStreams();
         })();
-      }, []); // Dependency array remains empty if getUserIDFromAuthToken doesn't depend on any state or props
-      
+      }, []); // Dependency array remains empty if getUserIDFromAuthToken doesn't depend on any state or props      
 
     return (
         <div className="container">
