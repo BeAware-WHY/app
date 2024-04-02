@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { auth } from "../firebase";
 import useAuthToken from "../../../constants/useAuthToken";
+import { getUserIDFromAuthToken } from './../firebase';
 
 function CurrentStreamHeading() {
     return (
@@ -101,23 +102,27 @@ function PastStream() {
     // Generate an array of 8 elements
     // const items = Array.from({ length: 8 }, (_, index) => index + 1);
     useEffect(() => {
-        const fetchStreams = async () => {
-          const q = query(collection(database, "streamData"), where("userId", "==", "zYCCtNjmaNSNnef5iadSRssYN8U2")); // Replace 'loggedInUserId' with actual logged-in user ID
-          const querySnapshot = await getDocs(q);
-          const streams = [];
-    
-          for (let doc of querySnapshot.docs) {
-            const data = doc.data();
-            // Assuming data.logo is the path in Firebase Storage to the logo image
-            const logoUrl = await getDownloadURL(ref(storage, data.logoImageUrl));
-            streams.push({ ...data, logoUrl });
-          }
-    
-          setItems(streams);
-        };
-    
-        fetchStreams();
-      }, []);
+        (async () => { // Immediately invoked async function
+          const userId = await getUserIDFromAuthToken();
+          console.log(userId);
+          const fetchStreams = async () => {
+            const q = query(collection(database, "streamData"), where("userId", "==", userId)); // Use the awaited userId
+            const querySnapshot = await getDocs(q);
+            const streams = [];
+      
+            for (let doc of querySnapshot.docs) {
+              const data = doc.data();
+              const logoUrl = await getDownloadURL(ref(storage, data.logoImageUrl));
+              streams.push({ ...data, logoUrl, backgroundColor: data.streamColor });
+            }
+      
+            setItems(streams);
+          };
+      
+          await fetchStreams();
+        })();
+      }, []); // Dependency array remains empty if getUserIDFromAuthToken doesn't depend on any state or props
+      
 
     return (
         <div className="container">
@@ -127,7 +132,7 @@ function PastStream() {
               <div className="past-streams-card">
                 {/* Uncomment if you want to include the rounded square */}
                 {/* <div className="past-streams-rounded-square"></div> */}
-                <div className="past-streams-rectangle"></div>
+                <div className="past-streams-rectangle" style={{ backgroundColor: item.backgroundColor }}></div>
                 <div className="past-streams-logo">
                   <img src={item.logoUrl} alt="Company Logo" />
                 </div>
