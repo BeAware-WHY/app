@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './DashBoard.css';
-// import './CreateStream/CreateStream.css'
-// import './src/components/pages/CreateStream/CreateStream.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { Link } from 'react-router-dom';
 import { faUserAlt, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { collection, addDoc, query, where, getDocs, orderBy } from 'firebase/firestore';
-import { database } from '../firebase';
+import { database, auth, fetchDataForUserId } from '../firebase';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
-import { auth } from "../firebase";
 import useAuthToken from "../../../constants/useAuthToken";
 import { getUserIDFromAuthToken } from './../firebase';
 
@@ -27,7 +23,7 @@ function PastStreamHeading() {
 }
 
 
-function CurrentStream() {
+function CurrentStream({ streamData }) {
     const [text, setText] = useState('');
     const navigate = useNavigate();
     const handleEditStream = () => {
@@ -44,6 +40,14 @@ function CurrentStream() {
             alert('Failed to copy text!');
         }
     };
+
+    const handleDownloadPDF = () => {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = '../../../../ConferenceCaptioning-Instructions 2.pdf';
+        downloadLink.download = 'ConferenceCaptioning-Instructions.pdf';
+        downloadLink.click();
+    };
+    console.log("50----",streamData);
     return (
     <div className="currentstream-main">
         <div className="image-corner-left-currentstream">
@@ -53,19 +57,19 @@ function CurrentStream() {
             <div className="stream-card-currentstream">
                 <div className="logo-column">
                     <div className="logo-placeholder">
-                        <img src="" alt="Company Logo" />
+                        <img src={streamData && streamData.length > 0 ? streamData[1] : ''} alt="Company Logo" />
                     </div>
                     <div className="download-buttons-pdf">
-                        <button type="submit" className="eventbutton">Download PDF</button>
+                        <button type="submit" onClick={handleDownloadPDF} className="eventbutton">Download PDF</button>
                     </div>
                 </div>
                 <div className="column-main">
                     <div className="semi-circle"></div>
-                    <div className="streamname-from-database"> Name - Stream Name</div>
+                    <div className="streamname-from-database"> Name -  {streamData && streamData.length > 0 ? streamData[0].streamName : 'Stream Name'}</div>
                     <div style={{ position: 'relative', display: 'inline-block', marginBottom: '20px' }}>
                         <input
                             type="text"
-                            value={text}
+                            value={streamData && streamData.length > 0 ? streamData[0].filePath : {text}}
                             onChange={(e) => setText(e.target.value)}
                             disabled
                             style={{ width: '300px', padding: '10px', marginRight: '40px', borderRadius: '5px', marginLeft: '40px' }}
@@ -75,7 +79,7 @@ function CurrentStream() {
                             <FontAwesomeIcon icon={faCopy} />
                         </button>
                     </div>
-                    <textarea disabled className="stream-desc-from-database" placeholder="Enter Stream Description"></textarea>
+                    <textarea value={streamData && streamData.length > 0 ? streamData[0].streamDescription : ''} disabled className="stream-desc-from-database" placeholder="Enter Stream Description"></textarea>
                 </div>
                 <div className="edit-column">
                     {/* <div className="edit-icon-createstream" onClick={handleEditStream}>
@@ -161,8 +165,35 @@ function DashBoard() {
 
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedOption, setHighlightedOption] = useState(null);
+    const [streamData, setStreamData] = useState({
+    filePath: '',
+    streamName: '',
+    logoImageUrl: '',
+    streamQr: '',
+    streamDesc: '',
+    streamColor: ''
+});
+    const storage = getStorage();
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await fetchDataForUserId();
+                console.log("180----",data[0]);
+                await getDownloadURL(ref(storage, data[0].logoImageUrl));
+                // await getDownloadURL(ref(storage, data[0].qrCodeDataURL));
+                const logoUrl = await getDownloadURL(ref(storage, data[0].logoImageUrl));
+                // const qrCodeDataURL = await getDownloadURL(ref(storage, data[0].qrCodeDataURL));
+                const qrCodeDataURL=''
+                console.log("163----",qrCodeDataURL)
+                const updatedStreamData = [data[0], logoUrl, qrCodeDataURL];
+                setStreamData(updatedStreamData); // Update stream link state
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
 
-
+        fetchData();
+    }, []);
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
