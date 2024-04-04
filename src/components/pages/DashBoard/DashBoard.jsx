@@ -4,8 +4,8 @@ import './DashBoard.css';
 // import './src/components/pages/CreateStream/CreateStream.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { Link } from 'react-router-dom';
-import { faUserAlt, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
-import { collection, addDoc, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { faUserAlt, faPencilAlt, faDownload } from '@fortawesome/free-solid-svg-icons';
+import { collection, addDoc, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { database } from '../firebase';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
@@ -26,74 +26,198 @@ function PastStreamHeading() {
     );
 }
 
-
 function CurrentStream() {
-    const [text, setText] = useState('');
+    const [streamName, setStreamName] = useState('');
+    const [streamDescription, setStreamDescription] = useState('');
+    const [streamColor, setStreamColor] = useState(''); // This will be used if you decide to use the color dynamically
+    const [streamLink, setStreamLink] = useState('');
+    const [logoUrl, setLogoUrl] = useState('');
+    const [qrUrl, setQRUrl] = useState('');
     const navigate = useNavigate();
+    const storage = getStorage();
+
+    useEffect(() => {
+        (async () => {
+            const userId = await getUserIDFromAuthToken();
+            const fetchLatestStream = async () => {
+                const q = query(collection(database, "streamData"), where("userId", "==", userId), orderBy("streamDate", "desc"), limit(1));
+                console.log(q);
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    const latestStream = querySnapshot.docs[0].data();
+                    setStreamName(latestStream.streamName);
+                    setStreamDescription(latestStream.streamDescription);
+                    setStreamColor(latestStream.streamColor); // Assuming color is directly usable
+                    setStreamLink(latestStream.filePath);
+
+                    if (latestStream.logoImageUrl) {
+                        const logoRef = ref(storage, latestStream.logoImageUrl);
+                        const logoDownloadUrl = await getDownloadURL(logoRef);
+                        setLogoUrl(logoDownloadUrl);
+                    }
+                    if (latestStream.qrCodeDataURL) {
+                        const qrRef = ref(storage, latestStream.qrCodeDataURL + ".jpg");
+                        const qrDownloadUrl = await getDownloadURL(qrRef);
+                        setQRUrl(qrDownloadUrl);
+                        localStorage.setItem('qrCodeUrl', qrDownloadUrl); 
+                    }
+                }
+            };
+
+            await fetchLatestStream();
+        })();
+    }, []);
+
     const handleEditStream = () => {
-        // Navigate to the dashboard screen
         navigate('/editstream');
     };
-    const handleCopy = async () => {
-        // Copy text to clipboard logic here
+
+    const handleDownloadQR = async () => {
+        const qrUrl = localStorage.getItem('qrCodeUrl'); // Retrieve the URL from localStorage
+        if (!qrUrl) {
+            console.error('QR code URL is missing');
+            return;
+        }
+    
+        // Prepend the CORS proxy URL to the target URL
+        // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+        const proxyUrl = 'http://localhost:8080/';
+        const proxiedUrl = proxyUrl + qrUrl;
+    
         try {
-            await navigator.clipboard.writeText(text);
+            const response = await fetch(proxiedUrl, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest', // Some CORS proxies require this header
+                }
+            });
+            if (!response.ok) throw new Error('Network response was not ok');
+            
+            const imageBlob = await response.blob();
+            const imageObjectURL = URL.createObjectURL(imageBlob);
+    
+            const a = document.createElement('a');
+            a.href = imageObjectURL;
+            a.download = 'QRCode.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+    
+            setTimeout(() => URL.revokeObjectURL(imageObjectURL), 100);
+        } catch (error) {
+            console.error("Error downloading QR code:", error);
+        }
+    };
+    
+    
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(streamLink);
             alert('Text copied to clipboard!');
         } catch (error) {
             console.error('Failed to copy text:', error);
             alert('Failed to copy text!');
         }
     };
+    const handleDownloadPDF = async () => {
+        try {
+            // Assuming your development server or production build process serves files from the public directory
+            // Adjust the path to match your project structure if needed
+            const storage = getStorage();
+            const pdfRef = ref(storage, 'pdf/ConferenceCaptioning-Instructions 2.pdf');
+            const url = await getDownloadURL(pdfRef);
+            
+            // `url` is the download URL for the PDF
+            const proxyUrl = 'http://localhost:8080/';
+            const proxiedUrl = proxyUrl + url;
+    
+            // Fetch the PDF through a proxy
+            const response = await fetch(proxiedUrl, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest', // Some CORS proxies require this header
+                }
+            });
+            
+            if (!response.ok) throw new Error('Network response was not ok');
+            
+            const pdfBlob = await response.blob();
+            const pdfObjectURL = URL.createObjectURL(pdfBlob);
+    
+            // Create an anchor element and trigger the download
+            const a = document.createElement('a');
+            a.href = pdfObjectURL;
+            a.download = 'ConferenceCaptioning-Instructions.pdf'; // Update the filename as needed
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+    
+            // Clean up the object URL
+            setTimeout(() => URL.revokeObjectURL(pdfObjectURL), 100);
+        } catch (error) {
+            console.error("Error downloading PDF:", error);
+        }
+    };
+    
     return (
-    <div className="currentstream-main">
-        <div className="image-corner-left-currentstream">
-            <img src="./src/assets/images/dashboard.png" alt="personstreamcreate" />
-        </div>
-        <div className="stream-card-container-currentstream">
-            <div className="stream-card-currentstream">
-                <div className="logo-column">
-                    <div className="logo-placeholder">
-                        <img src="" alt="Company Logo" />
+        <div className="currentstream-main">
+            <div className="image-corner-left-currentstream">
+                {/* Static image, can be replaced or removed as needed */}
+                <img src="./src/assets/images/dashboard.png" alt="Dashboard" />
+            </div>
+            <div className="stream-card-container-currentstream">
+                <div className="stream-card-currentstream" style={{ borderColor: streamColor }}> {/* Border color could be used to indicate stream color */}
+                    <div className="logo-column">
+
+                        <div className="logo-placeholder">
+                            {/* Dynamically loaded stream logo */}
+                            <img src={logoUrl} alt="Company Logo" />
+
+                        </div>
+                        <div className="download-buttons-pdf">
+                            <button type="button" className="eventbutton" onClick={handleDownloadPDF}>Download PDF</button> {/* Assuming this will be implemented */}
+                        </div>
                     </div>
-                    <div className="download-buttons-pdf">
-                        <button type="submit" className="eventbutton">Download PDF</button>
-                    </div>
-                </div>
-                <div className="column-main">
-                    <div className="semi-circle"></div>
-                    <div className="streamname-from-database"> Name - Stream Name</div>
-                    <div style={{ position: 'relative', display: 'inline-block', marginBottom: '20px' }}>
-                        <input
-                            type="text"
-                            value={text}
-                            onChange={(e) => setText(e.target.value)}
-                            disabled
-                            style={{ width: '300px', padding: '10px', marginRight: '40px', borderRadius: '5px', marginLeft: '40px' }}
-                            placeholder="Enter text here..."
+                    <div className="column-main">
+                        <div className="semi-circle" style={{ backgroundColor: streamColor }}></div> {/* Semi-circle showing stream color */}
+                        <div className="streamname-from-database">Name - {streamName}</div>
+                        <div style={{ position: 'relative', display: 'inline-block', marginBottom: '20px' }}>
+                            {/* Stream link input field */}
+                            <input
+                                type="text"
+                                value={streamLink}
+                                readOnly
+                                style={{ width: '300px', padding: '10px', marginRight: '40px', borderRadius: '5px', marginLeft: '40px' }}
+                            />
+                            {/* Copy to clipboard button */}
+                            <button className="copy-button" onClick={handleCopy} style={{ cursor: 'pointer' }}>
+                                <FontAwesomeIcon icon={faCopy} />
+                            </button>
+                        </div>
+                        {/* Stream description textarea */}
+                        <textarea
+                            readOnly
+                            className="stream-desc-from-database"
+                            value={streamDescription}
+                            style={{ width: '300px', padding: '10px', borderRadius: '5px', minHeight: '100px' }}
                         />
-                        <button className="copy-button" onClick={handleCopy}>
-                            <FontAwesomeIcon icon={faCopy} />
-                        </button>
                     </div>
-                    <textarea disabled className="stream-desc-from-database" placeholder="Enter Stream Description"></textarea>
-                </div>
-                <div className="edit-column">
-                    {/* <div className="edit-icon-createstream" onClick={handleEditStream}>
-                        <FontAwesomeIcon icon={faPencilAlt} />
-                    </div> */}
-                    <div className="download-buttons-qr">
-                        <button type="submit" className="eventbutton">Download QR</button>
+                    <div className="edit-column">
+                        <div className="image-download-wrapper">
+                            <img src={qrUrl} alt="QR Code" className="qr-image" />
+                            <button type="button" className="download-qr-button" onClick={handleDownloadQR}>
+                                <FontAwesomeIcon icon={faDownload} />
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="edit-icon-createstream" onClick={handleEditStream}>
-                <FontAwesomeIcon icon={faPencilAlt} />
+                <div className="edit-icon-createstream" onClick={handleEditStream} style={{ cursor: 'pointer' }}>
+                    <FontAwesomeIcon icon={faPencilAlt} />
+                </div>
             </div>
         </div>
-    </div>
     );
 }
-
 
 
 function PastStream() {
@@ -103,51 +227,51 @@ function PastStream() {
     // const items = Array.from({ length: 8 }, (_, index) => index + 1);
     useEffect(() => {
         (async () => {
-          const userId = await getUserIDFromAuthToken();
-          console.log(userId);
-          const fetchStreams = async () => {
-            const q = query(collection(database, "streamData"), where("userId", "==", userId), orderBy("streamDate", "desc"));
-            const querySnapshot = await getDocs(q);
-            const streams = [];
-      
-            for (let doc of querySnapshot.docs) {
-              const data = doc.data();
-              // Convert streamDate from Timestamp to JavaScript Date, if necessary
-              const streamDate = data.streamDate?.toDate ? data.streamDate.toDate() : data.streamDate;
-              const logoUrl = await getDownloadURL(ref(storage, data.logoImageUrl));
-              streams.push({ ...data, logoUrl, backgroundColor: data.streamColor, streamDate });
-            }
-      
-            // Remove the first element (the latest stream) if there's more than one stream
-            if (streams.length > 1) {
-              streams.shift(); // Removes the first element from the array
-            }
-      
-            setItems(streams);
-          };
-      
-          await fetchStreams();
+            const userId = await getUserIDFromAuthToken();
+            console.log(userId);
+            const fetchStreams = async () => {
+                const q = query(collection(database, "streamData"), where("userId", "==", userId), orderBy("streamDate", "desc"));
+                const querySnapshot = await getDocs(q);
+                const streams = [];
+
+                for (let doc of querySnapshot.docs) {
+                    const data = doc.data();
+                    // Convert streamDate from Timestamp to JavaScript Date, if necessary
+                    const streamDate = data.streamDate?.toDate ? data.streamDate.toDate() : data.streamDate;
+                    const logoUrl = await getDownloadURL(ref(storage, data.logoImageUrl));
+                    streams.push({ ...data, logoUrl, backgroundColor: data.streamColor, streamDate });
+                }
+
+                // Remove the first element (the latest stream) if there's more than one stream
+                if (streams.length > 1) {
+                    streams.shift(); // Removes the first element from the array
+                }
+
+                setItems(streams);
+            };
+
+            await fetchStreams();
         })();
-      }, []); // Dependency array remains empty if getUserIDFromAuthToken doesn't depend on any state or props      
+    }, []); // Dependency array remains empty if getUserIDFromAuthToken doesn't depend on any state or props      
 
     return (
         <div className="container">
-        <div className="scrollable-container">
-          {items.map((item, index) => (
-            <div key={index} className="past-stream-container">
-              <div className="past-streams-card">
-                {/* Uncomment if you want to include the rounded square */}
-                {/* <div className="past-streams-rounded-square"></div> */}
-                <div className="past-streams-rectangle" style={{ backgroundColor: item.backgroundColor }}></div>
-                <div className="past-streams-logo">
-                  <img src={item.logoUrl} alt="Company Logo" />
-                </div>
-                <div className="past-streams-company-name">{item.streamName}</div> {/* Replace `item.name` with your actual field name for the stream name */}
-              </div>
+            <div className="scrollable-container">
+                {items.map((item, index) => (
+                    <div key={index} className="past-stream-container">
+                        <div className="past-streams-card">
+                            {/* Uncomment if you want to include the rounded square */}
+                            {/* <div className="past-streams-rounded-square"></div> */}
+                            <div className="past-streams-rectangle" style={{ backgroundColor: item.backgroundColor }}></div>
+                            <div className="past-streams-logo">
+                                <img src={item.logoUrl} alt="Company Logo" />
+                            </div>
+                            <div className="past-streams-company-name">{item.streamName}</div> {/* Replace `item.name` with your actual field name for the stream name */}
+                        </div>
+                    </div>
+                ))}
             </div>
-          ))}
         </div>
-      </div>
     );
 }
 
@@ -307,7 +431,7 @@ function DashBoard() {
                 </div>
             </div>
             <br></br>
-            
+
             {isCurrentStreamActive ? <CurrentStream /> : <PastStream />}
         </div>
     );

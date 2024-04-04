@@ -97,21 +97,42 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    background-color: #CADBEC; /* Placeholder background color */
+    background-color: #CADBEC;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-    /* border-style: dashed; */
-    /* overflow: hidden; */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    /* border-style: dashed;  */
+     overflow: hidden;
+    /* width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 40px;
+    margin-top: 20px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #007bff;
+    color: white;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); */
   }
   
-  .logo-placeholder-currentstream img {
-    max-width: 100%;
+  .logo-placeholder img {
+    /* max-width: 100%;
     max-height: 100%;
     border-radius: 50%;
-    font-size: 12px;
+    font-size: 12px; */
+    /* width: 200px;
+    height: 200px;
+    object-fit: cover;
+    color: white; */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    color: white;
   }
 
   .logo-column {
@@ -124,7 +145,7 @@
     padding-bottom: 40px;
  }
  .edit-column {
-    display: flex;
+    /* display: flex; */
     flex-direction: column;
     align-items: center;
     width: 181px;
@@ -150,7 +171,7 @@
     cursor: pointer;
   }
 
-  .download-buttons-qr {
+  /* .download-buttons-qr {
     display: flex;
     justify-content: space-between;
     margin-top: 279px;
@@ -162,9 +183,40 @@
     border: none;
     border-radius: 20px;
     cursor: pointer;
-  }
+  } */
 
-  
+  .image-download-wrapper {
+    position: relative; /* Establishes a positioning context for absolute positioning inside */
+    width: 125px; /* Set width of the container */
+    height: 125px; /* Set height of the container */
+    display: flex; /* Ensures content is properly aligned */
+    justify-content: center; /* Center contents horizontally */
+    align-items: center; /* Center contents vertically */
+    margin-top: 190px;
+}
+
+.qr-image {
+    width: 125px; /* Make the image fill the container */
+    height: 125px; /* Make the image fill the container */
+    object-fit: cover; /* Cover the area without losing aspect ratio */
+    /* border-radius: 50%; Optional: if you want the image to be round */
+}
+
+.download-qr-button {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 5px;
+  /* margin: 10px; */
+  /* background-color: transparent; Optional: makes the button background transparent */
+  border: none; /* Optional: removes the button border */
+  cursor: pointer; /* Changes cursor to pointer on hover */
+}
+
+.download-qr-button img, .download-qr-button svg {
+  width: 15px; /* Adjust icon size as needed */
+  height: 15px; /* Adjust icon size as needed */
+} 
 
   .semi-circle {
     width: 140px; /* This should be the diameter of the circle you want to create */

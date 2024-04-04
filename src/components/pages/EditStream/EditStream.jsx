@@ -210,7 +210,7 @@ function EditStream() {
                     <div className="top-content-editstream">
                         <div className="left-content-editstream">
                             <div className="logo-container">
-                                <div className="logo-placeholder" onClick={() => document.getElementById('logoInput').click()}>
+                                <div className="logo-placeholder-editstream" onClick={() => document.getElementById('logoInput').click()}>
                                     {logoImage ? (
                                         <img src={logoImage} alt="Upload Logo*" />
                                     ) : (

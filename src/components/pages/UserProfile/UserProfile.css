@@ -45,14 +45,10 @@ body {
 }
 
 .logo-container {
-     display: flex;
-    justify-content: flex-start; /* Align items to the start (left) */
-    align-items: center; /* Center items vertically */
-    margin-left: 20px;
-}
-
-.logo-container img {
-    height: 30px; /* Adjust the logo height as needed */
+     /* display: flex; */
+    /* justify-content: flex-start; Align items to the start (left) */
+    /* align-items: center; Center items vertically */
+    /* margin-left: 20px; */
 }
 
 

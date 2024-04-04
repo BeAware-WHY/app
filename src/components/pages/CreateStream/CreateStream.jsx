@@ -207,7 +207,7 @@ function CreateStream() {
                 <div className="stream-card">
                     <div className="left-content">
                         <div className="logo-container">
-                            <div className="logo-placeholder" onClick={() => document.getElementById('logoInput').click()}>
+                            <div className="logo-placeholder-createstream" onClick={() => document.getElementById('logoInput').click()}>
                                 {logoImage ? (
                                     <img src={logoImage} alt="Upload Logo*" />
                                 ) : (

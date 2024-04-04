@@ -37,7 +37,7 @@
     /* border-style: dashed; */
   }
   
-  .logo-placeholder {
+  .logo-placeholder-createstream {
     position: relative;
     width: 150px;
     height: 150px;
@@ -47,11 +47,12 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
     /* border-style: dashed; */
     /* overflow: hidden; */
   }
   
-  .logo-placeholder img {
+  .logo-placeholder-createstream img {
     max-width: 100%;
     max-height: 100%;
     border-radius: 50%;
@@ -60,7 +61,7 @@
 
   .edit-icon {
     position: relative;
-    bottom: -60px; /* Adjust to move inside if necessary */
+    bottom: -120px; /* Adjust to move inside if necessary */
     right: 50px; /* Adjust to move inside if necessary */
     color: #000;
     height: 20px;
