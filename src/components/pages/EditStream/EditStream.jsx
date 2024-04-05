@@ -36,7 +36,7 @@ function EditStream() {
     const handleCopy = async () => {
         // Copy text to clipboard logic here
         try {
-            await navigator.clipboard.writeText(text);
+            await navigator.clipboard.writeText(filePath);
             alert('Text copied to clipboard!');
         } catch (error) {
             console.error('Failed to copy text:', error);
