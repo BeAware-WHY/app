@@ -5,6 +5,7 @@ import { faUserAlt, faPencilAlt, faCopy, faCheck } from '@fortawesome/free-solid
 // import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { collection, addDoc, query, getDocs, doc, updateDoc, where } from 'firebase/firestore';
 import { database } from '../firebase';
+import Loader from "../../resources/Loader/loader";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import useAuthToken from "../../../constants/useAuthToken";
@@ -25,9 +26,12 @@ function EditStream() {
     const [filePath, setFilePath] = useState('');
     const [logoUrl, setLogoUrl] = useState('');
     const [logoImage, setLogoImage] = useState(null);
+    const [streamNameError, setStreamNameError] = useState('');
     // const [streamDocId, setStreamDocId] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedOption, setHighlightedOption] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
     const storage = getStorage();
     let isLogoChange = false;
     const toggleDropdown = () => {
@@ -68,9 +72,19 @@ function EditStream() {
 
         fetchStreamDetails();
     }, [decodedStreamName]);
-
+    const handleInput = (e) => {
+        const inputValue = e.target.value;
+        
+        if (inputValue === '' || /^[A-Za-z]+$/.test(inputValue)) {
+            setStreamName(inputValue);
+            setStreamNameError(''); // Clear the error message
+        } else {
+            setStreamNameError('Stream Name should only contain alphabetic characters.');
+        }
+    };
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setIsLoading(true); 
         const userId = await getUserIDFromAuthToken();
         const logoStorageRef = ref(storage, `logo/${userId}/${streamName}`);
         const imageBlob = await fetch(logoImage).then((res) => res.blob());
@@ -123,14 +137,19 @@ function EditStream() {
                 });
 
                 console.log('Form data and API response saved in Firebase successfully!');
-
+                alert("Stream '"+streamName+ "' Saved Successfully!!!")
+                navigate('./dashboard')
             } else {
                 console.error('Failed to create stream:', response.statusText);
+                setIsLoading(false);
+                alert("Stream Name '" + streamName + "' is already Taken !!!");
                 // Handle error
             }
         } catch (error) {
             console.error('Error occurred while creating stream:', error);
             // Handle error
+        } finally{
+            setIsLoading(false);
         }
     };
     const handleLogoChange = (event) => {
@@ -188,7 +207,7 @@ function EditStream() {
             document.removeEventListener('click', handleClickOutside);
         };
     }, []);
-
+    console.log('isLoading:', isLoading); 
     return (
         <div className="background">
             <nav className="navbar-editstream">
@@ -229,8 +248,11 @@ function EditStream() {
             <div className="image-corner-right">
                 <img src="../src/assets/images/bgglobe.png" alt="Background Globe" />
             </div>
+            
             <br></br>
             <div className="generate-stream-text">Editing is where the magic happens</div>
+            <br></br>
+            {isLoading && <div style={{ background: 'rgba(255, 255, 255, 0.5)' }}>Updating...</div>}
             <br></br>
             <div style={{ position: 'relative', display: 'inline-block', marginBottom: '20px' }}>
                 <input
@@ -305,9 +327,11 @@ function EditStream() {
                                     id="streamName"
                                     placeholder="E.g. XYZ Stream"
                                     value={streamName}
-                                    onChange={(e) => setStreamName(e.target.value)}
+                                    onChange={handleInput}
+                                    // onChange={(e) => setStreamName(e.target.value)}
                                     required
                                 />
+                                 {streamNameError && <div className="error-message">{streamNameError}</div>}
                             </div>
                             <div className="streamColor-editstream">
                                 <label htmlFor="streamColor" style={{ width: '150px' }}><b>Stream Color:</b><b style={{ color: '#cc0000' }}>*</b></label>
@@ -340,6 +364,7 @@ function EditStream() {
                     <FontAwesomeIcon icon={faCheck} />
                 </div>
             </div>
+            
         </div>
     );
 

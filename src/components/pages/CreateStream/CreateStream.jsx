@@ -93,15 +93,15 @@ function CreateStream() {
     const storage = getStorage(app);
     const handleInput = (e) => {
         const inputValue = e.target.value;
-        const isValid = /^[A-Za-z]+$/.test(inputValue); // Check if the input contains only alphabetic characters
         
-        if (isValid) {
+        if (inputValue === '' || /^[A-Za-z]+$/.test(inputValue)) {
             setStreamName(inputValue);
             setStreamNameError(''); // Clear the error message
         } else {
             setStreamNameError('Stream Name should only contain alphabetic characters.');
         }
     };
+    
     
     const handleSubmit = async (event) => {
         setIsLoading(true);
@@ -235,9 +235,9 @@ function CreateStream() {
                         <div className="logo-container">
                             <div className="logo-placeholder-createstream" onClick={() => document.getElementById('logoInput').click()}>
                                 {logoImage ? (
-                                    <img src={logoImage} alt="Upload Logo*" />
+                                    <img src='./src/assets/images/imageicon.jpeg' alt="Upload Logo*" />
                                 ) : (
-                                    <img src="logo.png" alt="Upload Logo*" required />
+                                    <img src="./src/assets/images/imageicon.jpeg" alt="Upload Logo*" required />
                                 )}
                             </div>
                             <div className="edit-icon" onClick={() => document.getElementById('logoInput').click()}>
