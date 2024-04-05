@@ -270,6 +270,7 @@ function EditStream() {
             <div className="image-corner-left-editstream">
                 <img src="../src/assets/images/editstream.png" alt="personstreamcreate" />
             </div>
+            {streamNameError && <div className="error-message-stream" style={{justifyContent:'center'}}>{streamNameError}</div>}
             <div className="card-container-editstream">
                 <div className="card-editstream">
                     <div className="top-content-editstream">
@@ -331,7 +332,7 @@ function EditStream() {
                                     // onChange={(e) => setStreamName(e.target.value)}
                                     required
                                 />
-                                 {streamNameError && <div className="error-message">{streamNameError}</div>}
+                                 
                             </div>
                             <div className="streamColor-editstream">
                                 <label htmlFor="streamColor" style={{ width: '150px' }}><b>Stream Color:</b><b style={{ color: '#cc0000' }}>*</b></label>

@@ -120,7 +120,8 @@ function CreateStream() {
         try {
             // const userId = await getUserIDFromAuthToken();
             console.log("Started request")
-            const response = await fetch('/api/stream/CreateStreamWithStyle', {
+            // const response = await fetch('/api/stream/CreateStreamWithStyle', {
+                const response = await fetch('https://localhost:7050/api/v1.0/stream/create-stream', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -136,11 +137,13 @@ function CreateStream() {
                 window.location.reload();
                 const data = await response.json();
                 console.log('File Path:', data.filePath);
-
-
-                const qrCodeDataURL = await QRCode.toDataURL(data.filePath);
-                const qrBlob = await fetch(qrCodeDataURL).then((res) => res.blob());
+                
+                
                 const qrStorageRef = ref(storage, `QR/${userId}/${streamName}.jpg`);
+                const qrCodeDataURL = await QRCode.toDataURL(data.filePath);
+                console.log('-------143', qrCodeDataURL)
+                const qrBlob = await fetch(qrCodeDataURL).then((res) => res.blob());
+                console.log('-------144', qrBlob)
                 await uploadBytes(qrStorageRef, qrBlob);
 
                 // Store form data and API response in Firebase
@@ -229,13 +232,14 @@ function CreateStream() {
             <br></br>
             <div className="generate-stream-text">Let&apos;s GENERATE greatness together!</div>
             <br></br>
+            {streamNameError && <div className="error-message-stream" style={{justifyContent:'center'}}>{streamNameError}</div>}
             <div className="stream-card-container">
                 <div className="stream-card">
                     <div className="left-content">
                         <div className="logo-container">
                             <div className="logo-placeholder-createstream" onClick={() => document.getElementById('logoInput').click()}>
                                 {logoImage ? (
-                                    <img src='./src/assets/images/imageicon.jpeg' alt="Upload Logo*" />
+                                    <img src={logoImage} alt="Upload Logo*" />
                                 ) : (
                                     <img src="./src/assets/images/imageicon.jpeg" alt="Upload Logo*" required />
                                 )}
@@ -275,7 +279,7 @@ function CreateStream() {
                                                 // onChange={(e) => setStreamName(e.target.value)}
                                                 required
                                             />
-                                            {streamNameError && <div className="error-message">{streamNameError}</div>}
+                                            
                                         </div>
 
                                         <div className="streamColor">
