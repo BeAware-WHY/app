@@ -99,6 +99,9 @@ function UserProfile() {
                 <div className="navbar-logo-dashboard">
                     <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
                 </div>
+                <div className="image-corner-left">
+                    <img src="./src/assets/images/personstreamcreate.png" alt="personstreamcreate" />
+                </div>
                 <div className='navbar-dashboard-right'>
 
 
