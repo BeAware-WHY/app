@@ -4,8 +4,8 @@ import './DashBoard.css';
 // import './src/components/pages/CreateStream/CreateStream.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { Link } from 'react-router-dom';
-import { faUserAlt, faPencilAlt, faDownload } from '@fortawesome/free-solid-svg-icons';
-import { collection, addDoc, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
+import { faUserAlt, faPencilAlt, faDownload, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { collection, addDoc, query, where, getDocs, orderBy, limit, deleteDoc } from 'firebase/firestore';
 import { database } from '../firebase';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { auth } from "../firebase";
 import useAuthToken from "../../../constants/useAuthToken";
 import { getUserIDFromAuthToken } from './../firebase';
+import Loader from "../../resources/Loader/loader";
 
 function CurrentStreamHeading() {
     return (
@@ -35,6 +36,7 @@ function CurrentStream() {
     const [qrUrl, setQRUrl] = useState('');
     const navigate = useNavigate();
     const storage = getStorage();
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -210,7 +212,7 @@ function CurrentStream() {
                             </button> */}
                         </div>
                         <div className="download-buttons-qr">
-                            <button type="submit" className="eventbutton"  onClick={handleDownloadQR}>Download QR</button>
+                            <button type="submit" className="eventbutton" onClick={handleDownloadQR}>Download QR</button>
                         </div>
                     </div>
                 </div>
@@ -224,11 +226,77 @@ function CurrentStream() {
 
 
 function PastStream() {
+    
+    
     const [items, setItems] = useState([]);
     const storage = getStorage();
+    const [isLoading, setIsLoading] = useState(false); 
+    
     // Generate an array of 8 elements
     // const items = Array.from({ length: 8 }, (_, index) => index + 1);
+    const handleDeleteStream = async (streamNameToDelete) => {
+        // Confirmation dialog
+        const q = query(collection(database, "streamData"), where("streamName", "==", streamNameToDelete));
+        try {
+            const querySnapshot = await getDocs(q);
+            if (querySnapshot.empty) {
+                console.log("No matching documents found.");
+                return;
+            }
+
+            const response = await fetch('/api/stream/DeleteStream', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    oldName: streamNameToDelete
+                })
+            });
+
+            if (response.ok) {
+                querySnapshot.forEach(async (document) => {
+                    await deleteDoc(document.ref);
+                    console.log(`Stream ${streamNameToDelete} deleted successfully.`);
+                });
+            }
+
+            // Optionally: Refresh the items shown in the UI
+            // setItems(prevItems => prevItems.filter(item => item.streamName !== streamNameToDelete));
+            const fetchStreams = async () => {
+                const userId = await getUserIDFromAuthToken();
+                const q = query(collection(database, "streamData"), where("userId", "==", userId), orderBy("streamDate", "desc"));
+                const querySnapshot = await getDocs(q);
+                const streams = [];
+
+                for (let doc of querySnapshot.docs) {
+                    const data = doc.data();
+                    // Convert streamDate from Timestamp to JavaScript Date, if necessary
+                    const streamDate = data.streamDate?.toDate ? data.streamDate.toDate() : data.streamDate;
+                    const logoUrl = await getDownloadURL(ref(storage, data.logoImageUrl));
+                    streams.push({ ...data, logoUrl, backgroundColor: data.streamColor, streamDate });
+                }
+
+                // Remove the first element (the latest stream) if there's more than one stream
+                if (streams.length > 1) {
+                    streams.shift(); // Removes the first element from the array
+                }
+
+                setItems(streams);
+            };
+            await fetchStreams();
+        } catch (error) {
+            console.error("Error deleting stream:", error);
+        }
+
+        if (!window.confirm(`Are you sure you want to delete the stream "${streamNameToDelete}"?`)) {
+            return;
+        }
+    };
+
     useEffect(() => {
+       
+        
         (async () => {
             const userId = await getUserIDFromAuthToken();
             console.log(userId);
@@ -252,11 +320,11 @@ function PastStream() {
 
                 setItems(streams);
             };
-
             await fetchStreams();
         })();
+        setIsLoading(true);
     }, []); // Dependency array remains empty if getUserIDFromAuthToken doesn't depend on any state or props      
-
+   
     return (
         <div className="container">
             <div className="scrollable-container">
@@ -270,6 +338,9 @@ function PastStream() {
                                 <img src={item.logoUrl} alt="Company Logo" />
                             </div>
                             <div className="past-streams-company-name">{item.streamName}</div> {/* Replace `item.name` with your actual field name for the stream name */}
+                        </div>
+                        <div className="edit-icon-paststream" style={{ cursor: 'pointer' }} onClick={() => handleDeleteStream(item.streamName)}>
+                            <FontAwesomeIcon icon={faTrash} />
                         </div>
                     </div>
                 ))}
@@ -288,7 +359,7 @@ function DashBoard() {
 
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedOption, setHighlightedOption] = useState(null);
-
+    const [isLoading, setIsLoading] = useState(false); 
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -358,7 +429,13 @@ function DashBoard() {
 
     const handlePastStreamClick = () => {
         setIsCurrentStreamActive(false);
+        setIsLoading(true); // Show the loader when switching to Past Stream
+    
+        setTimeout(() => {
+            setIsLoading(false); // Hide the loader after a delay (simulating data loading)
+        }, 500);
     };
+
     return (
         <div className="background">
             <nav className="navbar-dashboard">
@@ -435,7 +512,17 @@ function DashBoard() {
             </div>
             <br></br>
 
-            {isCurrentStreamActive ? <CurrentStream /> : <PastStream />}
+            {isCurrentStreamActive ? (
+                <CurrentStream />
+            ) : (
+                <div>
+                    {isLoading ? (
+                        <Loader /> // Show the loader while isLoading is true
+                    ) : (
+                        <PastStream />
+                    )}
+                </div>
+            )}
         </div>
     );
 }
