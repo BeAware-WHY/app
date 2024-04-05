@@ -28,7 +28,8 @@ function App() {
       ) : (
         <Routes>
           <Route path='/createstream' element={<CreateStream />} />
-          <Route path='/editstream' element={<EditStream />} />
+          {/* <Route path='/editstream' element={<EditStream />} /> */}
+          <Route path='/editstream/:streamName' element={<EditStream />} />
           <Route path='/dashboard' element={<DashBoard />} />
           <Route path='/userprofile' element={<UserProfile/>}  />
           {/* Redirect to Dashboard for other routes if authenticated */}

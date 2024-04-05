@@ -171,10 +171,10 @@
     cursor: pointer;
   }
 
-  /* .download-buttons-qr {
+  .download-buttons-qr {
     display: flex;
     justify-content: space-between;
-    margin-top: 279px;
+    /* margin-top: 200px; */
     padding-right: 47px;
   }
 
@@ -183,7 +183,7 @@
     border: none;
     border-radius: 20px;
     cursor: pointer;
-  } */
+  }
 
   .image-download-wrapper {
     position: relative; /* Establishes a positioning context for absolute positioning inside */
@@ -192,7 +192,8 @@
     display: flex; /* Ensures content is properly aligned */
     justify-content: center; /* Center contents horizontally */
     align-items: center; /* Center contents vertically */
-    margin-top: 190px;
+    margin-top: 130px;
+    margin-bottom: 20px;
 }
 
 .qr-image {

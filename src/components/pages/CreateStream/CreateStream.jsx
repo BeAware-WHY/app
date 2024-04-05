@@ -227,7 +227,7 @@ function CreateStream() {
                         </div>
                         <div className="message-container">
                             <p>Stream link will be displayed after this step</p>
-                            <p><b>Free links left - 2</b></p>
+                            {/* <p><b>Free links left - 2</b></p> */}
                         </div>
                     </div>
                     <div className="right-content">

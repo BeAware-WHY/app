@@ -59,7 +59,7 @@ function CurrentStream() {
                         const qrRef = ref(storage, latestStream.qrCodeDataURL + ".jpg");
                         const qrDownloadUrl = await getDownloadURL(qrRef);
                         setQRUrl(qrDownloadUrl);
-                        localStorage.setItem('qrCodeUrl', qrDownloadUrl); 
+                        localStorage.setItem('qrCodeUrl', qrDownloadUrl);
                     }
                 }
             };
@@ -69,7 +69,7 @@ function CurrentStream() {
     }, []);
 
     const handleEditStream = () => {
-        navigate('/editstream');
+        navigate(`/editstream/${encodeURIComponent(streamName)}`);
     };
 
     const handleDownloadQR = async () => {
@@ -78,12 +78,12 @@ function CurrentStream() {
             console.error('QR code URL is missing');
             return;
         }
-    
+
         // Prepend the CORS proxy URL to the target URL
         // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
         const proxyUrl = 'http://localhost:8080/';
         const proxiedUrl = proxyUrl + qrUrl;
-    
+
         try {
             const response = await fetch(proxiedUrl, {
                 method: 'GET',
@@ -92,24 +92,24 @@ function CurrentStream() {
                 }
             });
             if (!response.ok) throw new Error('Network response was not ok');
-            
+
             const imageBlob = await response.blob();
             const imageObjectURL = URL.createObjectURL(imageBlob);
-    
+
             const a = document.createElement('a');
             a.href = imageObjectURL;
             a.download = 'QRCode.png';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-    
+
             setTimeout(() => URL.revokeObjectURL(imageObjectURL), 100);
         } catch (error) {
             console.error("Error downloading QR code:", error);
         }
     };
-    
-    
+
+
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(streamLink);
@@ -126,11 +126,11 @@ function CurrentStream() {
             const storage = getStorage();
             const pdfRef = ref(storage, 'pdf/ConferenceCaptioning-Instructions 2.pdf');
             const url = await getDownloadURL(pdfRef);
-            
+
             // `url` is the download URL for the PDF
             const proxyUrl = 'http://localhost:8080/';
             const proxiedUrl = proxyUrl + url;
-    
+
             // Fetch the PDF through a proxy
             const response = await fetch(proxiedUrl, {
                 method: 'GET',
@@ -138,12 +138,12 @@ function CurrentStream() {
                     'X-Requested-With': 'XMLHttpRequest', // Some CORS proxies require this header
                 }
             });
-            
+
             if (!response.ok) throw new Error('Network response was not ok');
-            
+
             const pdfBlob = await response.blob();
             const pdfObjectURL = URL.createObjectURL(pdfBlob);
-    
+
             // Create an anchor element and trigger the download
             const a = document.createElement('a');
             a.href = pdfObjectURL;
@@ -151,14 +151,14 @@ function CurrentStream() {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-    
+
             // Clean up the object URL
             setTimeout(() => URL.revokeObjectURL(pdfObjectURL), 100);
         } catch (error) {
             console.error("Error downloading PDF:", error);
         }
     };
-    
+
     return (
         <div className="currentstream-main">
             <div className="image-corner-left-currentstream">
@@ -205,9 +205,12 @@ function CurrentStream() {
                     <div className="edit-column">
                         <div className="image-download-wrapper">
                             <img src={qrUrl} alt="QR Code" className="qr-image" />
-                            <button type="button" className="download-qr-button" onClick={handleDownloadQR}>
+                            {/* <button type="button" className="download-qr-button" onClick={handleDownloadQR}>
                                 <FontAwesomeIcon icon={faDownload} />
-                            </button>
+                            </button> */}
+                        </div>
+                        <div className="download-buttons-qr">
+                            <button type="submit" className="eventbutton"  onClick={handleDownloadQR}>Download QR</button>
                         </div>
                     </div>
                 </div>

@@ -3,22 +3,33 @@ import './EditStream.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserAlt, faPencilAlt, faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
 // import { faCopy } from '@fortawesome/free-solid-svg-icons';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, query, getDocs, doc, updateDoc, where } from 'firebase/firestore';
 import { database } from '../firebase';
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import useAuthToken from "../../../constants/useAuthToken";
+import { useParams } from 'react-router-dom';
+import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { app, getUserIDFromAuthToken } from './../firebase';
+import QRCode from 'qrcode';
 
 function EditStream() {
+    const { streamName: urlStreamName } = useParams();
+    const decodedStreamName = decodeURIComponent(urlStreamName);
     const [text, setText] = useState('');
     const navigate = useNavigate();
     const { removeToken } = useAuthToken();
     const [streamName, setStreamName] = useState('');
     const [streamColor, setStreamColor] = useState('#000000');
     const [streamDescription, setStreamDescription] = useState('');
-    const [logoImage, setLogoImage] = useState(null); // State to store the uploaded logo image
+    const [filePath, setFilePath] = useState('');
+    const [logoUrl, setLogoUrl] = useState('');
+    const [logoImage, setLogoImage] = useState(null);
+    // const [streamDocId, setStreamDocId] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedOption, setHighlightedOption] = useState(null);
+    const storage = getStorage();
+    let isLogoChange = false;
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
@@ -32,14 +43,100 @@ function EditStream() {
             alert('Failed to copy text!');
         }
     };
-    const handleEditStream = () => {
-        // Navigate to the dashboard screen
-        navigate('/editstream');
+    useEffect(() => {
+        const fetchStreamDetails = async () => {
+            const q = query(collection(database, "streamData"), where("streamName", "==", decodedStreamName));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+                console.log(querySnapshot)
+                const streamDetails = querySnapshot.docs[0].data(); // Assuming stream name is unique
+                console.log(streamDetails)
+                // Update your state with these details
+                setStreamName(streamDetails.streamName);
+                setStreamDescription(streamDetails.streamDescription);
+                setStreamColor(streamDetails.streamColor);
+                setFilePath(streamDetails.filePath);
+                if (streamDetails.logoImageUrl) {
+                    const logoRef = ref(storage, streamDetails.logoImageUrl);
+                    const logoDownloadUrl = await getDownloadURL(logoRef);
+                    setLogoUrl(logoDownloadUrl);
+                }
+            } else {
+                console.log("No such stream!");
+            }
+        };
+
+        fetchStreamDetails();
+    }, [decodedStreamName]);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const userId = await getUserIDFromAuthToken();
+        const logoStorageRef = ref(storage, `logo/${userId}/${streamName}`);
+        const imageBlob = await fetch(logoImage).then((res) => res.blob());
+        await uploadBytes(logoStorageRef, imageBlob);
+        const logoImageUploadUrl = await getDownloadURL(logoStorageRef);
+
+        try {
+            console.log("Started request")
+            let response = ''
+            if (decodedStreamName != streamName) {
+                response = await fetch('/api/stream/RenameStream', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        oldName: decodedStreamName,
+                        name: streamName,
+                        bannerColor: streamColor,
+                        logoUrl: logoImageUploadUrl // Assuming logoImage is the URL of the uploaded logo
+                    })
+                });
+                // console.log(response)
+            }
+
+            if (response.ok || decodedStreamName == streamName) {
+                // console.log('File Path:', data.filePath);
+                let data ='';
+                if (response.ok) {
+                    data = await response.json();
+                    const qrCodeDataURL = await QRCode.toDataURL(data.filePath);
+                    const qrBlob = await fetch(qrCodeDataURL).then((res) => res.blob());
+                    const qrStorageRef = ref(storage, `QR/${userId}/${streamName}.jpg`);
+                    await uploadBytes(qrStorageRef, qrBlob);
+                }
+
+                // Store form data and API response in Firebase
+                const querySnapshot = await getDocs(query(collection(database, "streamData"), where("streamName", "==", decodedStreamName)));
+                querySnapshot.forEach(async (doc) => {
+                    // Update each document that matches the query
+                    await updateDoc(doc.ref, {
+                        streamName,
+                        streamColor,
+                        streamDescription,
+                        logoImageUrl: `logo/${userId}/${streamName}`,
+                        qrCodeDataURL: `QR/${userId}/${streamName}`,
+                        filePath: decodedStreamName == streamName ? filePath : data.filePath,
+                        streamDate: new Date().toISOString()
+                    });
+                });
+
+                console.log('Form data and API response saved in Firebase successfully!');
+
+            } else {
+                console.error('Failed to create stream:', response.statusText);
+                // Handle error
+            }
+        } catch (error) {
+            console.error('Error occurred while creating stream:', error);
+            // Handle error
+        }
     };
     const handleLogoChange = (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
-
+        isLogoChange = true
         reader.onloadend = () => {
             setLogoImage(reader.result); // Set the logo image preview
         };
@@ -92,65 +189,11 @@ function EditStream() {
         };
     }, []);
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        // try {
-        //     const response = await fetch('https://localhost:7050/api/v1.0/stream/create-stream', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             name: streamName,
-        //             bannerColor: streamColor,
-        //             logoUrl: logoImage // Assuming logoImage is the URL of the uploaded logo
-        //         })
-        //     });
-
-        //     if (response.ok) {
-        //         const data = await response.json();
-        //         console.log('File Path:', data.filePath);
-
-        //         const qrCodeData = JSON.stringify({
-        //             name: streamName,
-        //             bannerColor: streamColor,
-        //             logoUrl: logoImage,
-        //             filePath: data.filePath
-        //         });
-        //         const qrCodeDataURL = `data:image/svg+xml;base64,${btoa(qrCodeData)}`;
-
-        //         // Store form data and API response in Firebase
-        //         const formData = {
-        //             streamName,
-        //             streamColor,
-        //             streamDescription,
-        //             logoImage,
-        //             qrCodeDataURL,
-        //             filePath: data.filePath,
-        //             streamDate: streamDate.toISOString()
-        //         };
-
-        //         // Add a document to the "streamData" collection in Firebase
-        //         await addDoc(collection(database, "streamData"), formData);
-
-        //         console.log('Form data and API response saved in Firebase successfully!');
-
-        //         // Perform any further actions based on the response from the backend, such as redirecting or displaying a success message
-        //     } else {
-        //         console.error('Failed to create stream:', response.statusText);
-        //         // Handle error
-        //     }
-        // } catch (error) {
-        //     console.error('Error occurred while creating stream:', error);
-        //     // Handle error
-        // }
-    };
     return (
         <div className="background">
             <nav className="navbar-editstream">
                 <div className="navbar-logo-editstream">
-                    <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
+                    <img src="../src/assets/images/logo-white.png" alt="Company Logo" />
                 </div>
                 <div className='navbar-editstream-right'>
 
@@ -184,7 +227,7 @@ function EditStream() {
                 {/* Dropdown code update till here*/}
             </nav>
             <div className="image-corner-right">
-                <img src="./src/assets/images/bgglobe.png" alt="Background Globe" />
+                <img src="../src/assets/images/bgglobe.png" alt="Background Globe" />
             </div>
             <br></br>
             <div className="generate-stream-text">Editing is where the magic happens</div>
@@ -192,7 +235,7 @@ function EditStream() {
             <div style={{ position: 'relative', display: 'inline-block', marginBottom: '20px' }}>
                 <input
                     type="text"
-                    value={text}
+                    value={filePath}
                     onChange={(e) => setText(e.target.value)}
                     disabled
                     style={{ width: '400px', padding: '10px', marginRight: '40px', borderRadius: '20px', marginLeft: '40px', height: '50px' }}
@@ -203,18 +246,42 @@ function EditStream() {
                 </button>
             </div>
             <div className="image-corner-left-editstream">
-                <img src="./src/assets/images/editstream.png" alt="personstreamcreate" />
+                <img src="../src/assets/images/editstream.png" alt="personstreamcreate" />
             </div>
             <div className="card-container-editstream">
                 <div className="card-editstream">
                     <div className="top-content-editstream">
                         <div className="left-content-editstream">
+                            {/* <div className="logo-container">
+                                <div className="logo-placeholder-editstream" onClick={() => document.getElementById('logoInput').click()}>
+                                    {logoUrl ? (
+                                        <img src={logoUrl} alt="Upload Logo*" />
+                                    ) : (
+                                        <img src={logoImage} alt="Upload Logo*" required />
+                                    )}
+                                </div>
+                                <div className="edit-icon-editstream" onClick={() => document.getElementById('logoInput').click()}>
+                                    <FontAwesomeIcon icon={faPencilAlt} />
+                                </div>
+                                <input
+                                    type="file"
+                                    id="logoInput"
+                                    accept="image/*"
+                                    onChange={handleLogoChange}
+                                    style={{ display: 'none' }}
+                                />
+                            </div> */}
                             <div className="logo-container">
                                 <div className="logo-placeholder-editstream" onClick={() => document.getElementById('logoInput').click()}>
                                     {logoImage ? (
-                                        <img src={logoImage} alt="Upload Logo*" />
+                                        // Display the newly uploaded image as a preview
+                                        <img src={logoImage} alt="Uploaded Logo Preview" />
+                                    ) : logoUrl ? (
+                                        // If no new image is uploaded, display the existing logo (if available)
+                                        <img src={logoUrl} alt="Upload Logo*" />
                                     ) : (
-                                        <img src="logo.png" alt="Upload Logo*" required />
+                                        // Fallback content or placeholder
+                                        <div>Upload Logo*</div>
                                     )}
                                 </div>
                                 <div className="edit-icon-editstream" onClick={() => document.getElementById('logoInput').click()}>
@@ -260,7 +327,6 @@ function EditStream() {
                         <textarea
                             id="streamDescription"
                             placeholder="You can write what is the purpose of this stream"
-                            // style={{width : '500px', height : '80px', borderRadius: '5px', marginTop: '5px'}}
                             className="stream-desc-from-database-editstream"
                             value={streamDescription}
                             onChange={(e) => setStreamDescription(e.target.value)}
@@ -270,7 +336,7 @@ function EditStream() {
                         </div>
                     </div>
                 </div>
-                <div className="save-icon-editstream" onClick={handleEditStream}>
+                <div className="save-icon-editstream" onClick={handleSubmit}>
                     <FontAwesomeIcon icon={faCheck} />
                 </div>
             </div>
