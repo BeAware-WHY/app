@@ -13,6 +13,7 @@ import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { auth } from "../firebase";
 import useAuthToken from "../../../constants/useAuthToken";
 import { getUserIDFromAuthToken } from './../firebase';
+import Loader from "../../resources/Loader/loader";
 
 function CurrentStreamHeading() {
     return (
@@ -35,6 +36,7 @@ function CurrentStream() {
     const [qrUrl, setQRUrl] = useState('');
     const navigate = useNavigate();
     const storage = getStorage();
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -224,8 +226,12 @@ function CurrentStream() {
 
 
 function PastStream() {
+    
+    
     const [items, setItems] = useState([]);
     const storage = getStorage();
+    const [isLoading, setIsLoading] = useState(false); 
+    
     // Generate an array of 8 elements
     // const items = Array.from({ length: 8 }, (_, index) => index + 1);
     const handleDeleteStream = async (streamNameToDelete) => {
@@ -289,6 +295,8 @@ function PastStream() {
     };
 
     useEffect(() => {
+       
+        
         (async () => {
             const userId = await getUserIDFromAuthToken();
             console.log(userId);
@@ -312,11 +320,11 @@ function PastStream() {
 
                 setItems(streams);
             };
-
             await fetchStreams();
         })();
+        setIsLoading(true);
     }, []); // Dependency array remains empty if getUserIDFromAuthToken doesn't depend on any state or props      
-
+   
     return (
         <div className="container">
             <div className="scrollable-container">
@@ -351,7 +359,7 @@ function DashBoard() {
 
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedOption, setHighlightedOption] = useState(null);
-
+    const [isLoading, setIsLoading] = useState(false); 
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -421,7 +429,13 @@ function DashBoard() {
 
     const handlePastStreamClick = () => {
         setIsCurrentStreamActive(false);
+        setIsLoading(true); // Show the loader when switching to Past Stream
+    
+        setTimeout(() => {
+            setIsLoading(false); // Hide the loader after a delay (simulating data loading)
+        }, 500);
     };
+
     return (
         <div className="background">
             <nav className="navbar-dashboard">
@@ -498,7 +512,17 @@ function DashBoard() {
             </div>
             <br></br>
 
-            {isCurrentStreamActive ? <CurrentStream /> : <PastStream />}
+            {isCurrentStreamActive ? (
+                <CurrentStream />
+            ) : (
+                <div>
+                    {isLoading ? (
+                        <Loader /> // Show the loader while isLoading is true
+                    ) : (
+                        <PastStream />
+                    )}
+                </div>
+            )}
         </div>
     );
 }
