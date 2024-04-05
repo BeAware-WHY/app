@@ -1,151 +1,251 @@
-/* Header */
-.navbar {
+.background {
+    height: 100vh;
+  }
+
+  .font-face-gm {
+    font-family: "PoppinsRegular";
+  }
+
+
+  .navbar-dashboard {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    background-color:#1B4375; /* Change background color as needed */
-    color: white;
-}
-.profile-field span {
-    border: 1px solid #ccc;
-    padding: 5px;
-    display: inline-block;
+    background-color: transparent; /* Make navbar transparent */
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  
+  }
 
-    border-radius: 5px;
-}
-.centered-table {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-body {
-    overflow: hidden;
-}
-
-.label-cell {
-    text-align: center;
-}
-
-
-
-
-.profile-table span {
-  display: inline-block;
-  height: 30px; /* Set a fixed height */
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  outline: none;
- /* Remove default focus outline */
-}
-
-.profile-table {
-  border-collapse: separate; /* Use separate border model */
-}
-
-.logo-container {
-     /* display: flex; */
-    /* justify-content: flex-start; Align items to the start (left) */
-    /* align-items: center; Center items vertically */
-    /* margin-left: 20px; */
-}
-
-
-.navbar-logo img {
-    height: 50px; /* Adjust logo height as needed */
-}
-
-.navbar-profile {
-    cursor: pointer;
-}
-
-.profile-icon {
+.navbar-logo-dashboard img {
+    height: 30px;
     margin-right: 10px;
+    margin-top: 0px;
 }
 
-.profile-popup {
+.navbar-dashboard-right{
+    display: flex;
+    align-items: center;
+  }
+
+  .new-stream-button {
+    position: relative;
+
+    background-color: #E5E5E5;
+    color: black;
+    width: fit-content;
+    /* left: 450px; */
+    /* border: none; */
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 20px;
+    
+    cursor: pointer;
+    display: block;
+    z-index: 999;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.new-stream-button:hover {
+    background-color: #a8a7a7;
+    
+}
+
+
+.dropdown {
+    position: relative;
+    border-radius: 50px;
+    background-color: #E5E5E5;
+    width: 36px;
+    height: 30px;
+    align-items: center;
+    padding-top: 5px;
+    cursor: pointer;
+  }
+  
+  .dropdown-toggle {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  .dropdown-toggle.active {
+    border-radius: 50%;
+    background-color: #E5E5E5; /* Highlight when dropdown is open */
+  }
+  
+  .dropdown-menu {
     position: absolute;
     top: 100%;
     right: 0;
     background-color: white;
-    border: 1px solid #ccc;
+    border: 2px solid white;
     border-radius: 5px;
-    padding: 5px;
-    display: none;
-}
-
-.profile-icon.active + .profile-popup {
-    display: block;
-}
-
-/* Vertical Navigation */
-.vertical-nav {
-    width: 200px;
-    background-color: #1B4375; /* Change background color as needed */
-    height: calc(100vh - 70px); /* Adjust height based on header height */
-    position: fixed;
-    top: 77px; /* Adjust top position based on header height */
-    left: 0;
-    overflow-y: auto;
-    border-right: 1px solid #ccc;
-}
-
-.vertical-nav ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.vertical-nav li {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
+    padding: 6px 0;
+    width: 70px;
+    height: 50px;
+    align-items: center;
+    align-self: center;
+  }
+  
+  .dropdown-option {
+    background-color: white;
+    border: none;
     cursor: pointer;
-    color: white;
-}
-
-.vertical-nav li:hover {
-    background-color:#CADBEC;
-}
-.views{
- background: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45));
-    color: white;
-}
-.label-cell {
-    text-align: right;
-    padding-right: 10px;
-}
-
-.profile-table {
-    width: 80%;
-    border-collapse: collapse;
-}
-
-.profile-table td {
-    padding: 5px;
-}
-
-.profile-table td span {
-    display: inline-block;
+    padding: 5px 10px;
     width: 100%;
-    padding: 3px;
-    box-sizing: border-box;
+    text-align: left;
+    background-color: white;
+  }
+  
+  .dropdown-option:hover,
+  .dropdown-option.highlighted {
+    background-color: #E5E5E5; /* Highlight when hovered or selected */
+  }
+
+  .generate-stream-text{
+    position: relative;
+    color: #CADBEC;
+    font-size: 28px;
+    margin-top: 20px;
+  }
+
+  .image-corner-left {
+   
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      
+  }
+  
+  .image-corner-left img {
+    width: 200px; /* Make the image responsive */
+    max-width: 300px; /* Ensure the image does not exceed its container */
+    height: auto; /* Maintain aspect ratio */
+    opacity: 0.8;
+  }
+
+  .card-container-profile {
+    position: relative;
+    display: flex;
+    justify-content: center; /* Center children horizontally */
+    align-items: start; /* Center children vertically */
+    height: 60vh;
 }
 
-.profile-table td label {
-    font-weight: bold;
+.card-profile {
+    width: 600px;
+    height: 360px;
+    background-color: rgba(255, 255, 255, 0.45);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column; /* Ensure its children stack vertically */
+    justify-content: center;/* Center children horizontally */
+    align-items: start; /* Center children vertically */
+    align-content: flex-start;
 }
 
-.profile-table td:nth-child(2),
-.profile-table td:nth-child(4) {
-    width: 30%;
+
+
+.profile-form{
+    align-self: center;
+    align-items: start;
 }
 
-.profile-table td:nth-child(3),
-.profile-table td:nth-child(4) {
-    padding-left: 10px;
-}
+  .inpt-label-profile {
+    flex: 0 0 auto; /* Let the label take its natural width */
+    margin-right: 0px; /* Add space between label and input */
+    font-family: "Poppins", sans-serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: small;
+    color: #000842;
+    margin-top: 10px;
+    padding-bottom: 20px;
+    text-align: start;
+    align-self: flex-start;
+    align-content: flex-start;
+    justify-content: flex-start;
+    
+  }
 
-.profile-table td:last-child {
-    border-bottom: none;
-}
+  
+.input-field-style-profile {
+    width: 100%;
+  padding: 4px;
+  padding-left: 30px;
+  margin-bottom: 10px;
+  border: 0;
+  outline: 0;
+  color: #000842;
+  border-bottom: 1px solid #000842;
+  font-family: "Poppins", sans-serif;
+  font-style: italic;
+  font-size: small;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  color: #000842;
+  background-color: transparent;
+  border-radius: 0; /* Remove border-radius or set it to 0 for straight edges */
+  }
+
+  .input-field-style-profile::placeholder{
+    color: #000842;
+    padding: 6px;
+  }
+  
+  /* Style for input wrapper */
+  .input-wrapper {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 6px;
+    display: flex; /* Use flexbox for layout */
+    align-items: flex-start; /* Align items vertically */
+    flex-direction: column;
+  }
+  
+  /* Style for input icon */
+  .input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-130%);
+    color: #666;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px; /* Adjust margin as needed */
+  }
+  
+  .rounded-button-profile {
+    border: none;
+    border-radius: 30px;
+    color: white;
+    padding: 0px 0px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;  
+    transition-duration: 0.4s;
+    cursor: pointer;
+    width: calc(33.33% - 10px); /* Adjust width to fit three buttons with spacing */
+    height: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  
+  .blue {
+    background-color: #1B4375; /* Blue color, adjust as needed */
+  }
+  
+  
+  
+  
