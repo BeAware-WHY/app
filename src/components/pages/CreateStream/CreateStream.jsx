@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import useAuthToken from "../../../constants/useAuthToken";
 import { app, getUserIDFromAuthToken } from './../firebase';
+import Loader from "../../resources/Loader/loader";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import QRCode from 'qrcode';
 
@@ -19,6 +20,9 @@ function CreateStream() {
     const [streamDescription, setStreamDescription] = useState('');
     const [logoImage, setLogoImage] = useState(null); // State to store the uploaded logo image
     const [streamDate] = useState(new Date());
+    const [isLoading, setIsLoading] = useState(false);
+    const [streamNameError, setStreamNameError] = useState('');
+
     const navigate = useNavigate();
     const { removeToken } = useAuthToken();
     const [isOpen, setIsOpen] = useState(false);
@@ -77,7 +81,8 @@ function CreateStream() {
         const reader = new FileReader();
 
         reader.onloadend = () => {
-            setLogoImage(reader.result); // Set the logo image preview
+            setLogoImage(reader.result); 
+            // Set the logo image preview
         };
 
         if (file) {
@@ -86,8 +91,21 @@ function CreateStream() {
     };
 
     const storage = getStorage(app);
-
+    const handleInput = (e) => {
+        const inputValue = e.target.value;
+        const isValid = /^[A-Za-z]+$/.test(inputValue); // Check if the input contains only alphabetic characters
+        
+        if (isValid) {
+            setStreamName(inputValue);
+            setStreamNameError(''); // Clear the error message
+        } else {
+            setStreamNameError('Stream Name should only contain alphabetic characters.');
+        }
+    };
+    
     const handleSubmit = async (event) => {
+        setIsLoading(true);
+        
         event.preventDefault();
         console.log(logoImage)
         const userId = await getUserIDFromAuthToken();
@@ -114,11 +132,10 @@ function CreateStream() {
                 })
             });
             console.log(response)
-
             if (response.ok) {
+                window.location.reload();
                 const data = await response.json();
                 console.log('File Path:', data.filePath);
-
 
 
                 const qrCodeDataURL = await QRCode.toDataURL(data.filePath);
@@ -142,20 +159,29 @@ function CreateStream() {
                 await addDoc(collection(database, "streamData"), formData);
 
                 console.log('Form data and API response saved in Firebase successfully!');
-
+                
+                console.log("Redirecting to dashboard...");
+                alert("Stream Created Successfully");
+                setIsLoading(false);
+                navigate("/dashboard"); 
+                
                 // Perform any further actions based on the response from the backend, such as redirecting or displaying a success message
             } else {
                 console.error('Failed to create stream:', response.statusText);
-                // Handle error
+                setIsLoading(false);
+                alert("Stream Name '" + streamName + "' is already Taken !!!");
+                
             }
         } catch (error) {
             console.error('Error occurred while creating stream:', error);
+            alert(error);
             // Handle error
         }
     };
 
     return (
         <div className="background">
+              {isLoading && <Loader />}
             <nav className="navbar-createstream">
                 <div className="navbar-logo-createstream">
                     <img src="./src/assets/images/logo-white.png" alt="Company Logo" />
@@ -234,6 +260,7 @@ function CreateStream() {
                         <div className="content-container">
                             <div className="stream-details">
                                 <form onSubmit={handleSubmit}>
+                               
                                     <div className="streamColorName">
                                         <div className="streamName">
                                             <label htmlFor="streamName"><b style={{ width: '150px' }}>Stream Name:</b><b style={{ color: '#cc0000' }}>*</b></label>
@@ -243,10 +270,14 @@ function CreateStream() {
                                                 id="streamName"
                                                 placeholder="E.g. XYZ Stream"
                                                 value={streamName}
-                                                onChange={(e) => setStreamName(e.target.value)}
+                                                onChange={handleInput}
+                                                
+                                                // onChange={(e) => setStreamName(e.target.value)}
                                                 required
                                             />
+                                            {streamNameError && <div className="error-message">{streamNameError}</div>}
                                         </div>
+
                                         <div className="streamColor">
                                             <label htmlFor="streamColor" style={{ width: '150px' }}><b>Stream Color:</b><b style={{ color: '#cc0000' }}>*</b></label>
                                             <input
@@ -271,6 +302,7 @@ function CreateStream() {
                                         <button type="submit" className="eventbutton">Create</button>
                                     </div>
                                 </form>
+                                {isLoading && <Loader />}
                             </div>
                         </div>
                     </div>
